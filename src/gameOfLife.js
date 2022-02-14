@@ -2,55 +2,61 @@
 const grid = [];
 
 /* Constants */
-// For randomly generated grids, set a randomization factor for generating life.
-const randomFactor = 2.5;
-const ROWS = 30;
-const COLS = 20;
+const randomFactor = 2.5; // Life-generation factor (where 10 = 100%) when randomizing the board.
+const ROWS = 50;
+const COLS = 30;
 const rowLen = COLS;
 
+createGrid();
 
-// Periodically regenerate the grid.
+// On load of this script, periodically regenerate the grid.
 setInterval(() => {
   calculateNewGen(grid);
   renderNewGen(grid);
 }, 500);
 
+// Create the initial grid.
 function createGrid() {
-
-}
-
-
-// Iterate through all rows.
-for (let i = 0; i < 30; i++) {
-  const row = [];
-
-  // Iterate through all columns in a row.
-  for (let j = 0; j < 20; j++) {
-
-    // Pick a random number.
-    let random = Math.random() * 10;
-
-    // Whether the cell is 'living' depends on whether we picked a number below the constraint value (randomFactor).
-    let living = random < randomFactor ? 1 : 0;
-
-    // Fixed image: Oscillator will oscillate.
-    if (i === 1 && (j === 1 || j === 2 || j === 3)) {
-      row.push(new Cell(1));
-
-      // Fixed image: Beehive, will remain stable.
-    } else if (((i === 5 || i === 7) && (j === 2 || j === 3)) || (i == 6 && (j === 1 || j === 4))) {
-      row.push(new Cell(1));
-
-      // Moving image: Glider, which will move.
-    } else if ((i === 10 && j === 2) || (i === 11 && (j === 0 || j === 2)) || (i === 12 && (j === 1 || j === 2))) {
-      row.push(new Cell(1));
-    } else {
-      row.push(new Cell(0));
+  // Iterate through all rows.
+  for (let i = 0; i < ROWS; i++) {
+    const row = [];
+    // Iterate through all columns in a row.
+    for (let j = 0; j < COLS; j++) {
+      // Pick a random number.
+      let random = Math.random() * 10;
+      // Whether the cell is 'living' depends on whether we picked a number below the constraint value (randomFactor).
+      let living = random < randomFactor ? 1 : 0;
+      // Fixed image: Oscillator will oscillate.
+      if (i === 1 && (j === 1 || j === 2 || j === 3)) {
+        row.push(new Cell(1));
+        // Fixed image: Beehive, will remain stable.
+      } else if (((i === 5 || i === 7) && (j === 2 || j === 3)) || (i == 6 && (j === 1 || j === 4))) {
+        row.push(new Cell(1));
+        // Moving image: Glider, which will move.
+      } else if ((i === 10 && j === 2) || (i === 11 && (j === 0 || j === 2)) || (i === 12 && (j === 1 || j === 2))) {
+        row.push(new Cell(1));
+      } else {
+        row.push(new Cell(0));
+      }
     }
+    grid.push(row);
   }
-  grid.push(row);
 }
 
+// Function for printing the grid.
+function gridPrinter(grid) {
+  const gridArr = [];
+  for (let row = 0; row < grid.length; row++) {
+    const rowArr = [];
+    for (let col = 0; col < rowLen; col++) {
+      let currentCellAlive = grid[row][col].aliveThisGen;
+      if (currentCellAlive) rowArr.push(1);
+      else rowArr.push(0);
+    }
+    gridArr.push(rowArr);
+  }
+  return gridArr;
+}
 
 // Class / Function for creating a new cell.
 function Cell(living) {
@@ -60,29 +66,27 @@ function Cell(living) {
   this.aliveNextGen = 0;
 }
 
-// Generate next generation's grid.
-function renderNewGen(grid) {
-  for (let row = 0; row < grid.length; row++) {
-    for (let col = 0; col < rowLen; col++) {
-      grid[row][col].aliveThisGen = grid[row][col].aliveNextGen;
-      //grid[row][col].aliveNextGen = 0;
-    }
-  }
-  console.table(gridPrinter(grid));
-}
-
-//
+// Update each Cell's nextGen value so that a new grid can be printed.
 function calculateNewGen(grid) {
-  // loop through each row
   for (let row = 0; row < grid.length; row++) {
-    // loop through each column
     for (let col = 0; col < rowLen; col++) {
       updateCell(row, col);
     }
   }
 }
 
-// Count sum total of neighbors of the cell, and set update.
+// Print out the next generation's grid.
+function renderNewGen(grid) {
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < rowLen; col++) {
+      grid[row][col].aliveThisGen = grid[row][col].aliveNextGen;
+    }
+  }
+  console.table(gridPrinter(grid));
+}
+
+// Function calculates number of neighbors (8) that are 1s. Based on number of neighbors,
+// this function sets the aliveNextGen value of the cell.
 function updateCell(row, col) {
   let currentCell = grid[row][col];
   let neighborsAlive = 0;
@@ -126,20 +130,3 @@ function updateCell(row, col) {
     }
   }
 }
-
-
-// Function for printing the grid.
-function gridPrinter(grid) {
-  const gridArr = [];
-  for (let row = 0; row < grid.length; row++) {
-    const rowArr = [];
-    for (let col = 0; col < rowLen; col++) {
-      let currentCellAlive = grid[row][col].aliveThisGen;
-      if (currentCellAlive) rowArr.push(1);
-      else rowArr.push(0);
-    }
-    gridArr.push(rowArr);
-  }
-  return gridArr;
-}
-
