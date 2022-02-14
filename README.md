@@ -1,6 +1,7 @@
 # game-of-lineage
 
-Empty project.
+Conways game of life with some twists, in react.
+
 
 ## Building and running on localhost
 
