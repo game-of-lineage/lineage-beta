@@ -7,6 +7,7 @@ import ControlPanel from './controlPanel.js'
 import {useState, useEffect} from 'react';
 import runGame from './runGame.js';
 import simulateBoard from './simulateBoard.js';
+import UserDash from './components/userDash/userDash.jsx';
 
 
 const App = ({ name }) => {
@@ -29,7 +30,7 @@ const App = ({ name }) => {
         setTick(!tick)
       }, timer);
   }
-    
+
   }, [tick, play]);
 
   useEffect(()=> {
@@ -39,8 +40,9 @@ const App = ({ name }) => {
    return (
       <>
         <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
+        <UserDash initialBoardState={initialBoardState} boardState={boardState} setInitialBoardState={setInitialBoardState} setBoardState={setBoardState}/>
         <div id='board'>
-        {boardState.map((row, idx) => 
+        {boardState.map((row, idx) =>
         <SquareRow row={row} style={{height: `${100/boardState.length}%`}} key={idx} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
         </div>
       </>
