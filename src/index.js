@@ -1,12 +1,13 @@
+import ReactDOM from "react-dom";
+import sass from "sass";
 import React from 'react'
-import ReactDOM from 'react-dom';
 import App from "./App";
-import "./styles.css";
+import "./styles.scss";
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App  name="Squirtle" />
   </React.StrictMode>,
   document.getElementById('app')
 );

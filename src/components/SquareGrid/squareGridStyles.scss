@@ -1,0 +1,11 @@
+.grid-container {
+    // doing a flexbox at the moment but for whatever reason it's not applying these stylings, I must be missing something
+    display: flex;
+    flex-direction: row;
+    width: 150px;
+    flex-wrap: wrap;
+}
+
+* {
+    background-color: aqua;
+}
