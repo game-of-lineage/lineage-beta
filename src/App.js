@@ -40,7 +40,7 @@ const App = ({ name }) => {
         <h1>
           Hello {name} nice to see you
         </h1>
-        <UserDash />
+        <UserDash initialBoardState={initialBoardState} boardState={boardState} setInitialBoardState={setInitialBoardState} setBoardState={setBoardState}/>
         <div id='board'>
         {boardState.map((row, idx) =>
         <SquareRow row={row} style={{height: `${100/boardState.length}%`}} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
