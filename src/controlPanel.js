@@ -1,12 +1,18 @@
 import { FaClock, FaPlay, FaBackward, FaBook, FaPause, FaBookOpen} from 'react-icons/fa';
 import React from 'react';
+import {useState, useEffect} from 'react';
 import {Slider, Button} from '@mui/material';
+import Rules from './components/Rules/Rules.jsx';
 
-const ControlPanel = ({setPlay, play, setTimer, timer, setBoardState, initialBoardState}) => {
-
+const ControlPanel = ({setPlay, play, setTimer, timer, setBoardState, initialBoardState, setGeneration, Generation}) => {
+  const [openRules, setOpenRules] = useState(false);
   function handleSpeed(event) {
     console.log(event.target.firstChild.value)
     setTimer(10000/event.target.firstChild.value)
+  }
+
+  function showRules() {
+    setOpenRules(!openRules);
   }
 
   const marks = [
@@ -26,7 +32,9 @@ const ControlPanel = ({setPlay, play, setTimer, timer, setBoardState, initialBoa
 
   return (
     <>
-      <button><FaBook />Rules</button>
+      <button id="rules-button" onClick={showRules}><FaBook />{openRules ? 
+      <>Rules<br/><Rules/></> :
+       'Rules'}</button>
       <button><FaBookOpen />Lexicon</button>
 
       {/* Start/stop Algo */}
@@ -35,8 +43,6 @@ const ControlPanel = ({setPlay, play, setTimer, timer, setBoardState, initialBoa
       }}> <FaPlay />/<FaPause/>Start/Stop</button>
       {/* Pause and go back to initial input */}
       <button onClick={()=>setBoardState(initialBoardState.map((row)=>[...row]))}><FaBackward />Reset</button>
-      
-      <button><FaClock />IntervalsPerSecond</button>
       <div className='speedSlider'><h2>Speed</h2>
       <Slider 
       key={1} 
