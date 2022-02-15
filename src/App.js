@@ -18,6 +18,7 @@ const App = ({ name }) => {
   const [tick, setTick] = useState(true)
   const [timer, setTimer] = useState(1000)
   const [play, setPlay] = useState(false)
+  const [generation, setGeneration] = useState(0)
 
   useEffect(() => {
     if(play) {
@@ -36,14 +37,11 @@ const App = ({ name }) => {
 
    return (
       <>
-        <h1>
-          Hello {name} nice to see you
-        </h1>
+        <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
         <div id='board'>
         {boardState.map((row, idx) => 
         <SquareRow row={row} style={{height: `${100/boardState.length}%`}} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
         </div>
-        <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
       </>
     );
 }

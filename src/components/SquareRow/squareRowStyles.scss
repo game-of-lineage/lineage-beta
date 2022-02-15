@@ -1,10 +1,8 @@
+@import '../../styleVariables.scss';
+
 .row-container {
     // doing a flexbox at the moment but for whatever reason it's not applying these stylings, I must be missing something
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-}
-
-* {
-    background-color: aqua;
 }
