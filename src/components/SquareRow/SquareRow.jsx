@@ -9,7 +9,7 @@ const SquareRow = ({row, rowIndex, setBoardState, boardState}) => {
             <div className="row-container" style={{height: `${100/boardState.length}%`}}> 
                 {/* Mapping the passed in array of Nodes and rendering them each here,
                 will keep them arranged in scss grid or flexbox, not sure yet*/}
-                {row.map((alive, idx) => <Square alive={alive} rowIndex={rowIndex} boardState={boardState} setBoardState={setBoardState} columnIndex={idx}/>)}
+                {row.map((alive, idx) => <Square alive={alive} rowIndex={rowIndex} key={idx} boardState={boardState} setBoardState={setBoardState} columnIndex={idx}/>)}
             </div>
     )
 }
