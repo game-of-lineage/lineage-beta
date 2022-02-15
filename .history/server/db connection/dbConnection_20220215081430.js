@@ -1,0 +1,26 @@
+const http = require('http');
+const oracledb = require('oracledb');
+const dbConfig = require('./dbconfig.js');
+let error;
+let user;
+
+oracledb.getConnection({
+    user: dbConfig.dbUser,
+    password: dbConfig.dbPassword,
+    connectString: dbConfig.connectString
+
+    },
+    function(err, connection) {
+        if (err) {
+            error = err;
+            return;
+        }
+        connection.execute('SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE=\'BASE_TABLE\'', [], function (err, result) {
+            if (err) {
+                error = err
+            }
+        })
+    }
+
+
+)
