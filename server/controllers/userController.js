@@ -7,15 +7,15 @@ const userController = {};
 
 
 userController.login = async (req, res, next) => {
-  const {username, password} = req.body
+  const {username, password} = req.body;
   // FIND USER BY USERNAME IN DB
-  const userInformation = "database fetch results go here"
-  const storedPassword = userInformation.password
+  const userInformation = "database fetch results go here";
+  const storedPassword = userInformation.password;
 
-  const result = await comparePassword(password, storedPassword)
+  const result = await comparePassword(password, storedPassword);
   if(result) {
-    res.locals.userInformation = userInformation
-    return next()
+    res.locals.userInformation = userInformation;
+    return next();
   }
   res.send(403).json({error: "Wrong username or password"})
 }
