@@ -2,7 +2,6 @@
 const grid = [];
 
 /* Constants */
-const randomFactor = 2.5; // Life-generation factor (where 10 = 100%) when randomizing the board.
 const ROWS = 50;
 const COLS = 30;
 const rowLen = COLS;
@@ -17,16 +16,10 @@ setInterval(() => {
 
 // Create the initial grid.
 function createGrid() {
-  // Iterate through all rows.
   for (let i = 0; i < ROWS; i++) {
     const row = [];
-    // Iterate through all columns in a row.
     for (let j = 0; j < COLS; j++) {
-      // Pick a random number.
-      let random = Math.random() * 10;
-      // Whether the cell is 'living' depends on whether we picked a number below the constraint value (randomFactor).
-      let living = random < randomFactor ? 1 : 0;
-      // Fixed image: Oscillator will oscillate.
+      // oscillator
       if (i === 1 && (j === 1 || j === 2 || j === 3)) {
         row.push(new Cell(1));
         // Fixed image: Beehive, will remain stable.
@@ -90,9 +83,6 @@ function renderNewGen(grid) {
 function updateCell(row, col) {
   let currentCell = grid[row][col];
   let neighborsAlive = 0;
-  // count number of neighbors the cell has.
-
-  // check every direction.
   const directions = [
     [-1, -1],
     [-1, 0],
@@ -104,16 +94,13 @@ function updateCell(row, col) {
     [1, 1],
   ];
   directions.forEach((dir) => {
-    // check if cell at that direction is alvie this gen.
     let newRow = row + dir[0];
     let newCol = col + dir[1];
-
     if (newRow > -1 && newRow < grid.length - 1 && newCol > -1 && newCol < rowLen - 1) {
       if (grid[newRow][newCol].aliveThisGen === 1) neighborsAlive++;
     }
   });
 
-  // if cell is dead and has three live neighbors, then make alive.
   if (currentCell.aliveThisGen === 0) {
     if (neighborsAlive === 3) {
       currentCell.aliveNextGen = 1;
