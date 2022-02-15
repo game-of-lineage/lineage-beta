@@ -45,5 +45,6 @@
     "react-hot-loader": "^4.13.0",
     "react-table": "^7.7.0",
     "util": "^0.12.4"
+    "react-icons": "^4.3.1"
   }
 }

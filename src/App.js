@@ -3,10 +3,10 @@ import React from "react";
 import './styles.scss';
 import Square from './components/Square/Square.jsx'
 import SquareGrid from './components/SquareGrid/SquareGrid.jsx'
+import ControlPanel from './controlPanel'
 
-class App extends React.Component {
-  render() {
-    const { name } = this.props;
+const App = ({ name }) => {
+
     return (
       <>
         <h1>
@@ -15,9 +15,10 @@ class App extends React.Component {
         {/* just passing in an array of nine Squares for testing purposes, we will pass in the
         whole game grid once everything is connected */}
         <SquareGrid squareArray={[<Square/>,<Square/>,<Square/>,<Square/>,<Square/>,<Square/>,<Square/>,<Square/>,<Square/>]}/>
+        <ControlPanel />
       </>
     );
-  }
 }
 
-export default hot(App);
+
+export default App;
