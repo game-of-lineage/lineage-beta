@@ -32,8 +32,11 @@ userController.signup = async (req, res, next) => {
   // SAVE USER TO DB
   const newUser = 'INSERT INTO users (user_name, user_pass) VALUES ($1, $2);';
   await db.query(newUser, [username, hashedPassword])
-  res.locals.newUser = "new user from database goes here.";
-  next()
+    .then((user) => {
+  res.locals.newUser = user;
+  return next();
+    })
+  return next();
 };
 
 
