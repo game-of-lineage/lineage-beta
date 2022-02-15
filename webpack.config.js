@@ -20,6 +20,10 @@ const config = {
         use: ["style-loader", "css-loader"],
       },
       {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
         test: /\.svg$/,
         use: "file-loader",
       },
@@ -44,12 +48,20 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       templateContent: ({ htmlWebpackPlugin }) =>
-        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' +
-        htmlWebpackPlugin.options.title +
-        '</title></head><body><div id="app"></div></body></html>',
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Game of Lineage</title></head><body><div id="app"></div></body></html>',
       filename: "index.html",
     }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser'
+    })
   ],
+  resolve: {
+    extensions: ['.js'],
+    fallback: {
+      "fs" : false,
+      "path" : require.resolve("path-browserify")
+    }
+  }
 };
 
 module.exports = config;
