@@ -1,17 +1,18 @@
-import React from "react";
 import { hot } from 'react-hot-loader/root';
+import ControlPanel from './controlPanel'
+import React from 'react'
 
-class App extends React.Component {
-  render() {
-    const { name } = this.props;
+const App = ({ name }) => {
+
     return (
       <>
         <h1>
           Hello {name}
         </h1>
+        <ControlPanel />
       </>
     );
-  }
 }
 
-export default hot(App);
+
+export default App;
