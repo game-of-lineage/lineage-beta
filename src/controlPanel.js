@@ -1,60 +1,107 @@
-import { FaClock, FaPlay, FaBackward, FaBook, FaPause, FaBookOpen} from 'react-icons/fa';
-import React from 'react';
-import {Slider, Button} from '@mui/material';
+import {
+  FaClock,
+  FaPlay,
+  FaBackward,
+  FaBook,
+  FaPause,
+  FaBookOpen,
+} from "react-icons/fa";
+import React from "react";
+import { useState, useEffect } from "react";
+import { Slider, Button } from "@mui/material";
+import Rules from "./components/Rules/Rules.jsx";
 
-const ControlPanel = ({setPlay, play, setTimer, timer, setBoardState, initialBoardState}) => {
-
+const ControlPanel = ({
+  setPlay,
+  play,
+  setTimer,
+  timer,
+  setBoardState,
+  initialBoardState,
+  setGeneration,
+  Generation,
+}) => {
+  const [openRules, setOpenRules] = useState(false);
   function handleSpeed(event) {
-    console.log(event.target.firstChild.value)
-    setTimer(10000/event.target.firstChild.value)
+    console.log(event.target.firstChild.value);
+    setTimer(10000 / event.target.firstChild.value);
+  }
+
+  function showRules() {
+    setOpenRules(!openRules);
   }
 
   const marks = [
     {
       value: 5,
-      label: '1/sec',
+      label: "1/sec",
     },
     {
       value: 100,
-      label: '10/sec',
+      label: "10/sec",
     },
     {
       value: 195,
-      label: '20/sec',
+      label: "20/sec",
     },
   ];
 
   return (
     <div id={"control-panel-container"}>
-      <button><FaBook />&nbsp;&nbsp;Rules</button>
-      <button><FaBookOpen />&nbsp;&nbsp;Lexicon</button>
+      <button id="rules-button" onClick={showRules}>
+        <FaBook />&nbsp;&nbsp;
+        {openRules ? (
+          <>
+            &nbsp;&nbsp;Rules
+            <br />
+            <Rules />
+          </>
+        ) : (
+          "Rules"
+        )}
+      </button>
 
+      <button>
+        <FaBookOpen />
+        &nbsp;&nbsp;Lexicon
+      </button>
       {/* Start/stop Algo */}
-      <button onClick={() => {
-        setPlay(!play)
-      }}> <FaPlay /><FaPause/>&nbsp;&nbsp;Start/Stop</button>
+      <button
+        onClick={() => {
+          setPlay(!play);
+        }}
+      >
+        <FaPlay />
+        <FaPause />
+        &nbsp;&nbsp;Start/Stop
+      </button>
       {/* Pause and go back to initial input */}
-      <button onClick={()=>setBoardState(initialBoardState.map((row)=>[...row]))}><FaBackward />&nbsp;&nbsp;Reset</button>
-      <div className='speedSliderContainer'>
+      <button
+        onClick={() => setBoardState(initialBoardState.map((row) => [...row]))}
+      >
+        <FaBackward />
+        &nbsp;&nbsp;Reset
+      </button>
+      <div className="speedSliderContainer">
         <h2>Speed</h2>
-        <div className='speedSlider'>
-          <Slider 
-          orientation='vertical'
-          key={1}
-          size="small"
-          sx={{ width:1/5}}
-          aria-label='Speed'
-          valueLabelDisplay='off'
-          defaultValue={10}
-          marks={marks}
-          step={1}
-          min={1}
-          max={200}
-          onChangeCommitted={(e)=>handleSpeed(e)} />
-          </div>
+        <div className="speedSlider">
+          <Slider
+            key={1}
+            sx={{ width: 1 / 5 }}
+            aria-label="Speed"
+            orientation="vertical"
+            valueLabelDisplay="off"
+            defaultValue={10}
+            marks={marks}
+            step={1}
+            min={1}
+            max={200}
+            onChangeCommitted={(e) => handleSpeed(e)}
+          />
         </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default ControlPanel
+export default ControlPanel;

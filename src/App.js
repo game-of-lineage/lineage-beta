@@ -3,7 +3,7 @@ import React from "react";
 import './styles.scss';
 import Square from './components/Square/Square.jsx'
 import SquareRow from './components/SquareRow/SquareRow.jsx'
-import ControlPanel from './controlPanel'
+import ControlPanel from './controlPanel.js'
 import {useState, useEffect} from 'react';
 import runGame from './runGame.js';
 import simulateBoard from './simulateBoard.js';
@@ -25,6 +25,7 @@ const App = ({ name }) => {
       const newBoardState = runGame(boardState)
       setBoardState(newBoardState);
       setTimeout(()=>{
+        setGeneration(generation + 1)
         setTick(!tick)
       }, timer);
   }
@@ -40,7 +41,7 @@ const App = ({ name }) => {
         <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
         <div id='board'>
         {boardState.map((row, idx) => 
-        <SquareRow row={row} style={{height: `${100/boardState.length}%`}} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
+        <SquareRow row={row} style={{height: `${100/boardState.length}%`}} key={idx} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
         </div>
       </>
     );
