@@ -25,9 +25,9 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
     "sass": "^1.49.7",
     "sass-loader": "^12.5.0",
-    "nodemon": "^2.0.15",
     "style-loader": "^3.3.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.68.0",
@@ -35,16 +35,19 @@
     "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
-    "path-browserify": "^1.0.1",
-    "process": "^0.11.10",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.4.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.2",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hot-loader": "^4.13.0",
+    "react-icons": "^4.3.1",
     "react-table": "^7.7.0",
     "util": "^0.12.4"
-    "react-icons": "^4.3.1"
   }
 }
