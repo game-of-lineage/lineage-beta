@@ -2,6 +2,7 @@
 
 body {
   background-color: $black;
+  overflow:hidden;
 }
 
 #app{
@@ -14,12 +15,13 @@ body {
 #main{
   display: flex;
   height: 80%;
+  justify-content: space-evenly;
 }
 #footer{
   display: flex;
   justify-content: center;
   margin: 10px;
-  height: 20%;
+  height: 10%;
 }
 
 #board{
@@ -42,11 +44,14 @@ body {
     height: 250px;
     .MuiSlider-rail{
       color: $darkblue;
+      width: 10%;
     }
     .MuiSlider-track{
       color: $squirtle;
+      width: 10%;
     }
     .MuiSlider-markLabel{
+      left: 50px;
       color: $squirtle;
     }
     .MuiSlider-thumbColorPrimary{

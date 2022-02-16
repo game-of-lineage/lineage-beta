@@ -1,6 +1,49 @@
 @import '../../styleVariables.scss';
 
 #saveload{
+  display: flex;
+  width: 60%;
+  justify-content: center;
+  align-items: center;
   background-color: $blue;
   padding: 10px;
+  border: 2px ridge $squirtle;
+  box-shadow: 0px 0px 2px $white;
+  .wide{
+      width: 50%;
+    }
+  .storage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    
+    div{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      button{
+        width: 80px;
+      }
+      label{
+        margin-right: 2px;
+      }
+    }
+  }
+  form{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+  button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: $darkblue;
+    padding: 5px;
+    color: $squirtle;
+    border: 1px solid $squirtle;
+    box-shadow: 0px 0px 3px $white;
+  }
 }
