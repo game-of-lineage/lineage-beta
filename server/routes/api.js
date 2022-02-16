@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 //    "Log In"
 router.post('/users/login', login, (req, res, error) => {
     if (res.locals.userInformation){
-        res.status(200).json(`user found ${res.locals.userInformation.USER_NAME}`)
+        res.status(200).json(`user found ${res.locals.userInformation.user_name}`)
     } else {
         console.log('Could not find user');
         res.status(404).json(`User not found ${error}`)
@@ -24,7 +24,7 @@ router.post('/users/login', login, (req, res, error) => {
 //    "Sign Up"
 router.post('/users/signup', signup, (req, res, error) => {
     if (res.locals.newUser){
-        res.status(201).json(`new user created ${res.locals.newUser.username}`)
+        res.status(201).json(`new user created ${res.locals.newUser.user_name}`)
     } else {
         console.log('Error creating user');
         res.render(`Error creating user ${error}`)
