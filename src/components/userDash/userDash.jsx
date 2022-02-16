@@ -43,16 +43,23 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
 
   function loadBoard(event) {
     event.preventDefault();
-    fetch(`http://localhost:3000/api/boards/${loadSlot}`, {
+    console.log(loadSlot);
+    fetch(`http://localhost:3000/api/boardsGet`, {
       //Changing to POST, since cookies aren't sent on get
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: loadSlot
+      body: JSON.stringify({loadSlot: loadSlot})
     })
-      .then((data) => setBoardState(data))
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(JSON.parse(data));
+        console.log(typeof JSON.parse(data));
+        console.log(Array.isArray(JSON.parse(data)));
+        setBoardState(JSON.parse(data));
+      });
   }
 
   function handleLogin(event) {
@@ -169,7 +176,7 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
             <label htmlFor='logintext'>Username:</label>
             <input type='text'></input>
             <label htmlFor='password'>Password:</label>
-            <input type='text'></input>
+            <input type='password'></input>
             <button type='button' onClick={handleLogin}>
               Log In
             </button>
