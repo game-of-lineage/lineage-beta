@@ -13,20 +13,20 @@ userController.login = async (req, res, next) => {
   try {
     const response = await db.query(user, [username]);
     const userInformation = response.rows[0];
-    console.log(userInformation);
+    // console.log(userInformation);
     const storedPassword = userInformation.user_pass;
     const result = await comparePassword(password, storedPassword);
     if(result) {
       res.locals.userInformation = userInformation;
-      console.log('user_name');
-      console.log(JSON.stringify(res.locals.userInformation.user_name));
+      // console.log('user_name');
+      // console.log(JSON.stringify(res.locals.userInformation.user_name));
       res.cookie('cookie', res.locals.userInformation.user_name, { domain: 'localhost' });
       return next();
       }
     res.send(403).json({error: "Wrong username or password"})
 
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return next({
       message: error
     })

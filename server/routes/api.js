@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 router.post('/users/login', login, (req, res, error) => {
     if (res.locals.userInformation){
       console.log('res');
-      console.log(res);
+      // console.log(res);
       res.status(200).json(res.locals.userInformation.user_name);
         //res.status(200).send(`user found ${res.locals.userInformation.user_name}`)
     } else {
