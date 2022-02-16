@@ -15,6 +15,7 @@ boardController.saveBoard = async (req, res, next) => {
   console.log('saveslot');
   // console.log(req.body.saveSlot);
   if (req.cookies) {
+    console.log('found cookies');
     const username = req.cookies.cookie;
     const saveSlot = req.body.saveSlot;
     const board = JSON.stringify(req.body.board);
@@ -28,6 +29,7 @@ boardController.saveBoard = async (req, res, next) => {
     console.log('running second query');
     const queryForSave = 'INSERT INTO lexicon (title, board, slot_no, user_id) VALUES (\'cool_board\', $1, $2, $3) RETURNING *;';
     const saveResult = await db.query(queryForSave, [board, saveSlot, userId]);
+    console.log('saveResult');
     console.log(saveResult);
     res.locals.board = saveResult.rows[0].board;
 
@@ -48,14 +50,14 @@ boardController.loadBoard = async (req, res, next) => {
   console.log(req.cookies.cookie);
   console.log("req.body", req.body);
   if (req.cookies){
-    const slot = req.body;
+    const slot = req.body.loadSlot;
     const user = req.cookies.cookie;
     const query = `SELECT a.board FROM lexicon a
     JOIN users b ON a.user_id = b.u_id
     WHERE b.user_name = $1 AND a.slot_no = $2
     ;`;
     const saveResult = await db.query(query, [user, slot]);
-    res.locals.loadBoard = JSON.parse(saveResult.rows[0].board);
+    res.locals.loadBoard = saveResult.rows[0].board;
   }
   return next();
 }
