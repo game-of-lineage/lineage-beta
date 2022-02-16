@@ -3,10 +3,10 @@ import React from "react";
 import "./styles.scss";
 import Square from "./components/Square/Square.jsx";
 import SquareRow from "./components/SquareRow/SquareRow.jsx";
-import ControlPanel from "./controlPanel.js";
+import ControlPanel from "./components/ControlPanel/controlPanel.jsx";
 import { useState, useEffect, useCallback } from "react";
 // import runGame from './runGame.js';
-import simulateBoard from "./simulateBoard.js";
+import simulateBoard from "./utils/simulateBoard.js";
 import UserDash from "./components/userDash/userDash.jsx";
 
 const BOARD_WIDTH = 80;

@@ -9,7 +9,8 @@ import {
 import React from "react";
 import { useState, useEffect } from "react";
 import { Slider, Button } from "@mui/material";
-import Rules from "./components/Rules/Rules.jsx";
+import Rules from "../Rules/Rules.jsx";
+import "./controlPanel.scss"
 
 const ControlPanel = ({
   setPlay,
