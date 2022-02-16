@@ -10,10 +10,15 @@ boardController.saveBoard = (req, res, next) => {
   return next();
 }
 
-boardController.loadBoard = (req, res, next) => {
+boardController.randomizeBoard = (req, res, next) => {
   let blankBoard = new Array(40).fill(new Array(80).fill(0));
   // check if we have a figure for the requested figure.
-  res.locals.loadBoard = generateBoard(blankBoard, req.params.id);
+  res.locals.randomizeBoard = generateBoard(blankBoard, req.params.id);
+  return next();
+}
+
+boardController.loadBoard = (req, res, next) => {
+  console.log('logic for loadBoard');
   return next();
 }
 

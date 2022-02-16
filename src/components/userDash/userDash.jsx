@@ -42,7 +42,7 @@ const UserDash = ({boardState, initialBoardState, setBoardState, setInitialBoard
     console.log('fetching a random fig');
     const figs = ["block", "bee-hive", "loaf", "boat", "tub", "blinker", "toad", "beacon", "glider", "lwss", "mwss", "hwss"];
     const currentFigNum = Math.round(Math.random() * 12);
-    await fetch(`http://localhost:3000/api/boards/${figs[currentFigNum]}`)
+    await fetch(`http://localhost:3000/api/randomize/${figs[currentFigNum]}`)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
