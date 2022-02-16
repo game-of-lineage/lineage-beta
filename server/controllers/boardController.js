@@ -37,7 +37,7 @@ boardController.saveBoard = async (req, res, next) => {
 }
 
 boardController.randomizeBoard = (req, res, next) => {
-  let blankBoard = new Array(40).fill(new Array(80).fill(0));
+  let blankBoard = new Array(30).fill(new Array(60).fill(0));
   // check if we have a figure for the requested figure.
   res.locals.randomizeBoard = generateBoard(blankBoard, req.params.id);
   return next();

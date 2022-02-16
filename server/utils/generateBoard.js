@@ -16,7 +16,8 @@ function generateBoard(oldB, clientReq) {
         for (let col = 0; col < figures[fig][0].length; col++) {
           if (figures[fig][row][col] === 1) {
             for (let r = 0; r < rand; r++) {
-              board[topoffset + row + r*6][leftoffset + col + r*6] = 1;
+              const icon = Math.floor(Math.random()*24)+1;
+              board[topoffset + row + r*6][leftoffset + col + r*6] = icon;
             }
           }
         }
