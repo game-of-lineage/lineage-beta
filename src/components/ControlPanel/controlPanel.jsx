@@ -25,7 +25,7 @@ const ControlPanel = ({
   const [openRules, setOpenRules] = useState(false);
   function handleSpeed(event) {
     console.log(event.target.firstChild.value);
-    setTimer(10000 / event.target.firstChild.value);
+    setTimer(10000 / (event.target.firstChild.value**2));
   }
 
   function showRules() {
@@ -34,20 +34,20 @@ const ControlPanel = ({
 
   const marks = [
     {
-      value: 5,
-      label: "1/sec",
+      value: 1.5,
+      label: "0.1/sec",
     },
     {
-      value: 100,
+      value: 5,
+      label: "2/sec",
+    },
+    {
+      value: 10,
       label: "10/sec",
     },
     {
-      value: 200,
+      value: 22,
       label: "20/sec",
-    },
-    {
-      value: 490,
-      label: "50/sec",
     }
   ];
 
@@ -99,11 +99,11 @@ const ControlPanel = ({
             aria-label="Speed"
             orientation="vertical"
             valueLabelDisplay="off"
-            defaultValue={10}
+            defaultValue={3}
             marks={marks}
             step={1}
             min={1}
-            max={500}
+            max={22}
             onChangeCommitted={(e) => handleSpeed(e)}
           />
         </div>

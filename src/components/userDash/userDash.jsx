@@ -137,54 +137,60 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
   });
 
   return (
-    <div>
+    <div id='saveload'>
       {' '}
       {!userCookie ? (
         <form id='loginBox'>
-          <span>
-            <label for='logintext'>Username:</label>
+            <label htmlFor='logintext'>Username:</label>
             <input type='text'></input>
-            <label for='password'>Password:</label>
+            <label htmlFor='password'>Password:</label>
             <input type='text'></input>
             <button type='button' onClick={handleLogin}>
               Log In
             </button>
-          </span>
         </form>
       ) : (
-        <form id='saveload'>
-          <span>Name: {userCookie}</span>
+        <form>
+          <div className='storage'>
+            <div>Hello,</div>
+            <div>{userCookie}</div>
+
+          </div>
           <br />
-          <span>
-            <label for='save'>Save Board:</label>
-            <select name='savefiles' id='save' onChange={selectSave}>
-              <option value=''>Select a Slot to Save To</option>
-              {saveoptions}
-            </select>
-            <button name='savefiles' id='savebutton' onClick={saveBoard} type='button'>
-              Save
-            </button>
-          </span>
-          <span>
-            <label for='load'>Load Board:</label>
-            <select name='load' id='load' onChange={selectLoad}>
-              <option value=''>Select a File to Load</option>
-              {loadoptions}
-            </select>
-            <button name='loadButton' type='button' onClick={loadBoard}>Load</button>
-          </span>
-          <span>
-            <label for='random'>Randomize Board:</label>
-            <button name='randomfiles' id='randomButton' onClick={randomizeBoard}>
-              Randomize
-            </button>
-          </span>
-          <span>
-            <label for='upload'>Upload Board:</label>
-            <button name='uploadfiles' id='upload' onClick={uploadBoard}>
-              Upload
-            </button>
-          </span>
+          <div className='storage wide'>
+            <div>
+              <label for='save'>Save Board:</label>
+              <select name='savefiles' id='save' onChange={selectSave} defaultValue='default'>
+                <option value='default' disabled>Select Save Slot</option>
+                {saveoptions}
+              </select>
+              <button name='savefiles' id='savebutton' onClick={saveBoard} type='button'>
+                Save
+              </button>
+            </div>
+            <div>
+              <label for='load'>Load Board:</label>
+              <select name='load' id='load' onChange={selectLoad} defaultValue='default'>
+                <option value='default'>Select Load Slot</option>
+                {loadoptions}
+              </select>
+              <button name='loadButton' type='button' onClick={loadBoard}>Load</button>
+            </div>
+          </div>
+          <div className='storage'>
+            <div>
+              <label for='random'>Randomize:</label>
+              <button name='randomfiles' id='randomButton' onClick={randomizeBoard}>
+                Randomize
+              </button>
+            </div>
+            <div>
+              <label for='upload'>Upload Board:</label>
+              <button name='uploadfiles' id='upload' onClick={uploadBoard}>
+                Upload
+              </button>
+            </div>
+          </div>
         </form>
       )}
     </div>
