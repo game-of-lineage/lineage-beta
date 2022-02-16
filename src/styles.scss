@@ -15,6 +15,7 @@ body {
 #main{
   display: flex;
   height: 80%;
+  z-index: 2;
   justify-content: space-evenly;
 }
 #footer{
@@ -28,6 +29,7 @@ body {
   height: 100%;
   width: 75%;
   box-shadow: 0px 0px 2px $white;
+  z-index: -1;
 }
 
 .speedSliderContainer{
@@ -62,8 +64,4 @@ body {
       background-color: $black;;
     }
   }
-}
-
-#rules-button {
-  text-align: left;
 }
