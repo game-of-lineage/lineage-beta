@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {login, signup} = require('../controllers/userController')
+const {login, signup, loggedIn} = require('../controllers/userController')
 const {saveBoard, loadBoard, randomizeBoard, postBoard, loadBoardFromLexicon} = require('../controllers/boardController')
 
 // Initial load fetch
@@ -14,21 +14,33 @@ router.get('/', (req, res) => {
 //    "Log In"
 router.post('/users/login', login, (req, res, error) => {
     if (res.locals.userInformation){
-        res.status(200).json(`user found ${res.locals.userInformation.user_name}`)
+      console.log('res');
+      console.log(res);
+      res.status(200).json(res.locals.userInformation.user_name);
+        //res.status(200).send(`user found ${res.locals.userInformation.user_name}`)
     } else {
         console.log('Could not find user');
-        res.status(404).json(`User not found ${error}`)
+        res.status(404).send(`User not found ${error}`)
     }
-})
+});
 
 //    "Sign Up"
 router.post('/users/signup', signup, (req, res, error) => {
     if (res.locals.newUser){
-        res.status(201).json(`new user created ${res.locals.newUser.user_name}`)
+        res.status(201).send(`new user created ${res.locals.newUser.user_name}`);
     } else {
         console.log('Error creating user');
         res.render(`Error creating user ${error}`)
     }
+})
+
+router.get('/loggedIn', loggedIn, (req, res, error) => {
+  if (res.locals.userInformation){
+    res.status(200).send(`logged in with ${res.locals.userInformation.user_name}`)
+  } else {
+    console.log('Not logged in');
+    res.status(404).send(`User not logged in ${error}`)
+  }
 })
 
 // ***BOARD ROUTES***
