@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa";
 import React from "react";
 import { useState, useEffect } from "react";
-import { Slider, Button } from "@mui/material";
+import { Slider, Button, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import Rules from "../Rules/Rules.jsx";
 import "./controlPanel.scss"
 
@@ -52,20 +52,11 @@ const ControlPanel = ({
   ];
 
   return (
-    <div id={"control-panel-container"}>
-      <button id="rules-button" onClick={showRules}>
-        <FaBook />&nbsp;&nbsp;
-        {openRules ? (
-          <>
-            &nbsp;&nbsp;Rules
-            <br />
-            <Rules />
-          </>
-        ) : (
-          "Rules"
-        )}
-      </button>
-
+    <div id="control-panel-container">
+      <Accordion id="rules-button">
+        <AccordionSummary id="rules-summary"><FaBook />&nbsp;&nbsp;Rules</AccordionSummary>
+        <AccordionDetails id="rules-details" className="open-rules"><Rules/></AccordionDetails>
+      </Accordion>
       <button>
         <FaBookOpen />
         &nbsp;&nbsp;Lexicon

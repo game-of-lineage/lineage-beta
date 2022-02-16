@@ -2,7 +2,8 @@
 
 #control-panel-container{
   height: 100%;
-  white-space: nowrap;
+  // white-space: nowrap;
+  overflow:visible;
   background-color: $black;
   display: flex;
   justify-content: space-between;
@@ -10,7 +11,7 @@
   width: 15%;
   padding: 0 10px;
   margin: 0 0 0 10px;
-  button{
+  button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,5 +22,31 @@
     color: $squirtle;
     border: 1px solid $squirtle;
     box-shadow: 0px 0px 3px $white;
+  }
+  #rules-button {
+    text-overflow: wrap;
+    white-space: pre-wrap;
+    text-align: center;
+    font-family: arial;
+    font-size: 13.3333px;
+    background-color: $blue;
+    color: $squirtle;
+    border: 1px solid $squirtle;
+    box-shadow: 0px 0px 3px $white;
+    #rules-summary {
+      margin-left: 33%;
+      margin-right: 33%;
+    }
+    #rules-details {
+      text-align: left;
+      border-bottom: 1px solid $squirtle;
+      border-right: 1px solid $squirtle;
+      background-color: $blue;
+      color: $squirtle;
+      overflow: visible;
+    }
+  }
+  .speedSlider {
+    margin-bottom: 50px;
   }
 }
