@@ -73,12 +73,12 @@ const UserDash = ({boardState, initialBoardState, setBoardState, setInitialBoard
 
   const slots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   const saveoptions = slots.map((num) => {
-   return ( <option value={num} class='options' key={num}>
+   return ( <option value={num} className='options' key={num}>
       Save To Slot {num}
     </option>)
   });
   const loadoptions = slots.map((num) => {
-    return (<option value={num} class='options' key={num + 10}>
+    return (<option value={num} className='options' key={num + 10}>
       Load Slot {num}
     </option>)
   });
@@ -89,7 +89,7 @@ const UserDash = ({boardState, initialBoardState, setBoardState, setInitialBoard
         <span>Name: Squirtle</span>
         <br />
         <span>
-          <label for='save'>Save Board:</label>
+          <label htmlFor='save'>Save Board:</label>
           <select name='savefiles' id='save' onChange={selectSave}>
             <option value=''>
               Select a Slot to Save To
@@ -101,7 +101,7 @@ const UserDash = ({boardState, initialBoardState, setBoardState, setInitialBoard
           </button>
         </span>
         <span>
-          <label for='load'>Load Board:</label>
+          <label htmlFor='load'>Load Board:</label>
           <select name='loadfiles' id='load' onChange={selectLoad}>
             <option value=''>
               Select a File to Load
@@ -111,7 +111,7 @@ const UserDash = ({boardState, initialBoardState, setBoardState, setInitialBoard
           <button name='loadfiles' id='load' onClick={loadBoard}>Randomize</button>
         </span>
         <span>
-          <label for='upload'>Upload Board:</label>
+          <label htmlFor='upload'>Upload Board:</label>
           <button name='uploadfiles' id='upload' onClick={uploadBoard}>
             Upload
           </button>
