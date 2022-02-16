@@ -3,10 +3,11 @@ import React from "react";
 import './styles.scss';
 import Square from './components/Square/Square.jsx'
 import SquareRow from './components/SquareRow/SquareRow.jsx'
-import ControlPanel from './controlPanel'
+import ControlPanel from './controlPanel.js'
 import {useState, useEffect} from 'react';
 import runGame from './runGame.js';
 import simulateBoard from './simulateBoard.js';
+import UserDash from './components/userDash/userDash.jsx';
 
 
 const App = ({ name }) => {
@@ -18,16 +19,18 @@ const App = ({ name }) => {
   const [tick, setTick] = useState(true)
   const [timer, setTimer] = useState(1000)
   const [play, setPlay] = useState(false)
+  const [generation, setGeneration] = useState(0)
 
   useEffect(() => {
     if(play) {
       const newBoardState = runGame(boardState)
       setBoardState(newBoardState);
       setTimeout(()=>{
+        setGeneration(generation + 1)
         setTick(!tick)
       }, timer);
   }
-    
+
   }, [tick, play]);
 
   useEffect(()=> {
@@ -36,14 +39,16 @@ const App = ({ name }) => {
 
    return (
       <>
-        <h1>
-          Hello {name} nice to see you
-        </h1>
-        <div id='board'>
-        {boardState.map((row, idx) => 
-        <SquareRow row={row} style={{height: `${100/boardState.length}%`}} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
+        <div id='main'>
+          <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
+          <div id='board'>
+            {boardState.map((row, idx) =>
+            <SquareRow row={row} style={{height: `${100/boardState.length}%`}} key={idx} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
+          </div>
         </div>
-        <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
+        <div id='footer'>
+          <UserDash initialBoardState={initialBoardState} boardState={boardState} setInitialBoardState={setInitialBoardState} setBoardState={setBoardState}/>
+        </div>
       </>
     );
 }

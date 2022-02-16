@@ -1,20 +1,88 @@
-h1 {
-  color: red;
-  background-color: blue;
+@import './styleVariables.scss';
+
+body {
+  background-color: $black;
 }
+
 #app{
-  height: 750px;
-  width: 1500px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+#main{
+  display: flex;
+  height: 80%;
+}
+#footer{
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  height: 20%;
 }
 
 #board{
-  height: 75%;
+  height: 100%;
   width: 75%;
+  box-shadow: 0px 0px 2px $white;
 }
 
-.speedSlider{
+.speedSliderContainer{
   h2{
-    margin:5px;
+    margin: 5px;
   }
-  margin-left:20px;
+  color: $squirtle;
+  background-color: $blue;
+  height: 70%;
+  border: 2px ridge $squirtle;
+  box-shadow: 0px 0px 2px $white;
+  .speedSlider{
+    text-align: left;
+    height: 250px;
+    .MuiSlider-rail{
+      color: $darkblue;
+    }
+    .MuiSlider-track{
+      color: $squirtle;
+    }
+    .MuiSlider-markLabel{
+      color: $squirtle;
+    }
+    .MuiSlider-thumbColorPrimary{
+      color: $darkblue;
+    }
+    .MuiSlider-mark, .css-udnwse-MuiSlider-mark{
+      color: $black;
+      background-color: $black;;
+    }
+  }
+}
+
+#control-panel-container{
+  height: 100%;
+  white-space: nowrap;
+  background-color: $black;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 15%;
+  padding: 0 10px;
+  margin: 0 0 0 10px;
+  button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: $blue;
+    padding: 5%;
+    height: 5%;
+    color: $squirtle;
+    border: 1px solid $squirtle;
+    box-shadow: 0px 0px 3px $white;
+  }
+}
+
+#rules-button {
+  text-align: left;
 }
