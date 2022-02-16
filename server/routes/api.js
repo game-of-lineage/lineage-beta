@@ -49,20 +49,20 @@ router.get('/loggedIn', loggedIn, (req, res, error) => {
 router.get('/randomize/:id', randomizeBoard, (req, res) => {
   console.log('Received request to load board.');
   //console.log(res.locals.loadBoard);
-  res.json(res.locals.randomizeBoard);
+  res.status(200).json(res.locals.randomizeBoard);
 });
 
 router.get('/boards/:id', loadBoard, (req, res) => {
   console.log('Received request to load board.');
   //console.log(res.locals.loadBoard);
-  res.json(res.locals.loadBoard);
+  res.status(200).json(res.locals.loadBoard);
 });
 
 
 //     "Save a Board"
 router.post('/boards', saveBoard, (req, res) => {
   console.log('Received request to save board.');
-  res.json(res.locals.board);
+  res.status(201).json(res.locals.board);
 });
 
 // LEXICON ROUTES
@@ -70,13 +70,13 @@ router.post('/boards', saveBoard, (req, res) => {
 //    "Load a board from public board list"
 router.get('/boardsLex', loadBoardFromLexicon, (req, res) => {
   console.log('Completed retrieving a board from lexexon.');
-  res.json(res.locals.lexBoard);
+  res.status(200).json(res.locals.lexBoard);
 });
 
 //     "Post board to public board list"
 router.post('/boardsLex', postBoard, (req, res) => {
   console.log('Completed posting board to public board list.');
-  res.json();
+  res.status(201).json();
 });
 
 
