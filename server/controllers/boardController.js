@@ -13,7 +13,7 @@ boardController.saveBoard = async (req, res, next) => {
   console.log('board');
   console.log(req.body.board);
   console.log('saveslot');
-  console.log(req.body.saveSlot);
+  // console.log(req.body.saveSlot);
   if (req.cookies) {
     const username = req.cookies.cookie;
     const saveSlot = req.body.saveSlot;
@@ -46,15 +46,16 @@ boardController.randomizeBoard = (req, res, next) => {
 boardController.loadBoard = async (req, res, next) => {
   console.log('logic for loadBoard');
   console.log(req.cookies.cookie);
+  console.log("req.body", req.body);
   if (req.cookies){
-    const slot = req.params;
+    const slot = req.body;
     const user = req.cookies.cookie;
     const query = `SELECT a.board FROM lexicon a
     JOIN users b ON a.user_id = b.u_id
     WHERE b.user_name = $1 AND a.slot_no = $2
     ;`;
     const saveResult = await db.query(query, [user, slot]);
-    res.locals.loadBoard = saveResult.rows[0].board;
+    res.locals.loadBoard = JSON.parse(saveResult.rows[0].board);
   }
   return next();
 }

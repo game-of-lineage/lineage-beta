@@ -14,15 +14,15 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
   function selectSave(event) {
     event.preventDefault();
     setSaveSlot(event.target.value);
-    console.log('Currently selected save slot is now ' + event.target.value);
+    // console.log('Currently selected save slot is now ' + event.target.value);
   }
 
   //Saves boards to user's slots.
   function saveBoard(event) {
     event.preventDefault();
-    console.log('Here is the current board state');
-    console.log(boardState);
-    console.log('Saving the board state to slot ' + saveSlot);
+    // console.log('Here is the current board state');
+    // console.log(boardState);
+    // console.log('Saving the board state to slot ' + saveSlot);
 
     const postObj = {
       board: boardState,
@@ -38,24 +38,25 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
       body: JSON.stringify(postObj),
     })
       .then((response) => response.json())
-      .then((data) => console.log('Finished posting.'));
+      // .then((data) => console.log('Finished posting.'));
   }
 
   function loadBoard(event) {
     event.preventDefault();
-    fetch(`http://localhost:3000/api/boards/${saveSlot}`, {
+    fetch(`http://localhost:3000/api/boards/${loadSlot}`, {
       //Changing to POST, since cookies aren't sent on get
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: loadSlot
     })
       .then((data) => setBoardState(data))
   }
 
   function handleLogin(event) {
-    console.log(event.target.form[0].value);
+    // // console.log(event.target.form[0].value);
     const username = event.target.form[0].value;
     const password = event.target.form[1].value;
     fetch('http://localhost:3000/api/users/login', {
@@ -71,15 +72,15 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Finished fetching');
-        console.log(data);
-        console.log('cookie');
-        console.log(document.cookie.slice(7));
+        // console.log('Finished fetching');
+        // console.log(data);
+        // console.log('cookie');
+        // console.log(document.cookie.slice(7));
         setUserCookie(document.cookie.slice(7));
       })
       .catch((err) => {
-        console.log('Hit an error');
-        console.log(err);
+        // console.log('Hit an error');
+        // console.log(err);
       });
   }
 
@@ -87,7 +88,7 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
   function selectLoad(event) {
     event.preventDefault();
     setLoadSlot(event.target.value);
-    console.log('Currently selected load slot is now ' + event.target.value);
+    // console.log('Currently selected load slot is now ' + event.target.value);
   }
 
 
@@ -95,14 +96,14 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
   //Selects random board from lexicon.
   async function randomizeBoard(event) {
     event.preventDefault();
-    console.log('Loading board now.');
-    console.log('fetching a random fig');
+    // console.log('Loading board now.');
+    // console.log('fetching a random fig');
     const figs = ['block', 'bee-hive', 'loaf', 'boat', 'tub', 'blinker', 'toad', 'beacon', 'glider', 'lwss', 'mwss', 'hwss'];
     const currentFigNum = Math.round(Math.random() * 12);
     await fetch(`http://localhost:3000/api/randomize/${figs[currentFigNum]}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setBoardState(data);
       });
   }
@@ -113,11 +114,11 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
   //Loads from lexicon.
   function loadBoard2(event) {
     event.preventDefault();
-    console.log('Loading board now.');
+    // console.log('Loading board now.');
     fetch(`http://localhost:3000/api/load/${loadSlot}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setBoardState(data);
       });
   }
@@ -125,14 +126,14 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
   //Uploads to Lexicon.
   function submitBoard(event) {
     event.preventDefault();
-    console.log('Submitting board...');
-    console.log(event.target.value);
+    // console.log('Submitting board...');
+    // console.log(event.target.value);
   }
 
   //Uploads to Lexicon.
   async function uploadBoard(event) {
     event.preventDefault();
-    console.log('Uploading board to server. ' + event.target);
+    // console.log('Uploading board to server. ' + event.target);
     await await fetch('http://localhost:3000/api/boardsLex', {
       method: 'POST',
       headers: {
@@ -141,7 +142,7 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
       body: JSON.stringify(boardState),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      // .then((data) => console.log(data));
   }
 
   const slots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
