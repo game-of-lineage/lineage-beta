@@ -9,9 +9,8 @@ import { useState, useEffect, useCallback } from "react";
 import simulateBoard from "./utils/simulateBoard.js";
 import UserDash from "./components/userDash/userDash.jsx";
 
-const BOARD_WIDTH = 80;
-const BOARD_HEIGHT = 40;
-
+const BOARD_WIDTH = 60;
+const BOARD_HEIGHT = 30;
 const aliveCells = new Set();
 
 const App = ({ name }) => {
@@ -24,6 +23,7 @@ const App = ({ name }) => {
   const [boardState, setBoardState] = useState(
     simulateBoard(new Array(BOARD_HEIGHT).fill(new Array(BOARD_WIDTH).fill(0)))
   );
+
   const [tick, setTick] = useState(true);
   const [timer, setTimer] = useState(1000);
   const [play, setPlay] = useState(false);
@@ -51,7 +51,7 @@ const App = ({ name }) => {
       if (!play) {
         aliveCells.clear();
         let newBoardState = boardState.map((row) => [...row]);
-        newBoardState[row][col] = newBoardState[row][col] ? 0 : 1;
+        newBoardState[row][col] = newBoardState[row][col] ? 0 : Math.ceil(Math.random()*24);
         setSquareClicked(!squareClicked);
         setBoardState(newBoardState);
       }
@@ -139,54 +139,114 @@ const runGame = (grid, aliveCells) => {
     let alive = grid[row][col];
     let neighborsAlive = 0;
 
-    if (row < ROWS - 1 && col < COLS - 1)
-      neighborsAlive += grid[row + 1][col + 1];
+    let child;
+    const tally = {}
 
-    if (col < COLS - 1) neighborsAlive += grid[row][col + 1];
-    if (row < ROWS - 1) neighborsAlive += grid[row + 1][col];
-
-    if (col < COLS - 1 && row > 0) neighborsAlive += grid[row - 1][col + 1];
-    if (row < ROWS - 1 && col > 0) neighborsAlive += grid[row + 1][col - 1];
-
-    if (col > 0) neighborsAlive += grid[row][col - 1];
-    if (row > 0) neighborsAlive += grid[row - 1][col];
-
-    if (row > 0 && col > 0) neighborsAlive += grid[row - 1][col - 1];
+    if (row < ROWS - 1 && col < COLS - 1) {
+      const neighbor = grid[row + 1][col + 1]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
+    if (col < COLS - 1) {
+      const neighbor = grid[row][col + 1]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
+    if (row < ROWS - 1) {
+      const neighbor = grid[row + 1][col]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
+    if (col < COLS - 1 && row > 0) {
+      const neighbor = grid[row - 1][col + 1]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
+    if (row < ROWS - 1 && col > 0){
+      const neighbor = grid[row + 1][col - 1]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
+    if (col > 0){
+      const neighbor = grid[row][col - 1]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    } 
+    if (row > 0){
+      const neighbor = grid[row - 1][col]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    } 
+    if (row > 0 && col > 0){
+      const neighbor = grid[row - 1][col - 1]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
 
     const addNeighbors = (row, col) => {
       aliveCells.add(row + "," + col);
-      if (row < ROWS - 1 && col < COLS - 1) aliveCells.add(`${row+1},${col+1}`);
+      if (row < ROWS - 1 && col < COLS - 1){
+        aliveCells.add(`${row + 1},${col + 1}`);
+      }
 
-      if (col < COLS - 1) aliveCells.add(`${row},${col+1}`);
-      if (row < ROWS - 1) aliveCells.add(`${row+1},${col}`);
+      if (col < COLS - 1) {
+        aliveCells.add(`${row},${col + 1}`);
+      }
+      if (row < ROWS - 1) {
+        aliveCells.add(`${row + 1},${col}`);
+      }
 
-      if (col < COLS - 1 && row > 0) aliveCells.add(`${row-1},${col+1}`);
-      if (row < ROWS - 1 && col > 0) aliveCells.add(`${row+1},${col-1}`);
+      if (col < COLS - 1 && row > 0) {
+        aliveCells.add(`${row - 1},${col + 1}`);
+      }
+      if (row < ROWS - 1 && col > 0) {
+        aliveCells.add(`${row + 1},${col - 1}`);
+    }
 
-      if (col > 0) aliveCells.add(`${row},${col-1}`);
-      if (row > 0) aliveCells.add(`${row-1},${col}`);
+      if (col > 0) {
+        aliveCells.add(`${row},${col - 1}`);
+      }
+      if (row > 0) {
+        aliveCells.add(`${row - 1},${col}`);
+      }
 
-      if (row > 0 && col > 0) aliveCells.add(`${row-1},${col-1}`);
+      if (row > 0 && col > 0) {
+        aliveCells.add(`${row - 1},${col - 1}`);
+      }
     };
 
     // If dead
     if (!alive) {
       if (neighborsAlive === 3) {
-        newBoard[row][col] = 1;
+        const arr =[]
+        for(const key in tally){
+          if (key === '0') continue;
+          if (tally[key] > 1) child = Number(key)
+          arr.push(Number(key))
+        }
+        // newBoard[row][col] = child || arr[Math.floor(Math.random()*3)]
+        newBoard[row][col] = child || Math.floor(Math.random()*24)+1
         addNeighbors(row, col);
       }
     }
     // If alive
     if (alive) {
       if (neighborsAlive === 2 || neighborsAlive === 3) {
-        newBoard[row][col] = 1;
         addNeighbors(row, col);
       } else {
         newBoard[row][col] = 0;
       }
     }
-    
   }
+  
   return newBoard;
 };
 

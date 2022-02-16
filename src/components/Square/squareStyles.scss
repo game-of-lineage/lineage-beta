@@ -10,10 +10,17 @@
     &:hover {
         cursor: crosshair;
     }
+    img{
+        position: relative;
+        flex-shrink: 0;
+        max-height: 120%;
+        z-index: 1;
+    }
+
 }
 .alive{
     background-color: $white;
 }
 .dead{
-    background-color: $darkblue;
+    background-color: $white;
 }
