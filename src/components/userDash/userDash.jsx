@@ -17,6 +17,7 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
     console.log('Currently selected save slot is now ' + event.target.value);
   }
 
+  //Saves boards to user's slots.
   function saveBoard(event) {
     event.preventDefault();
     console.log('Here is the current board state');
@@ -37,7 +38,20 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
       body: JSON.stringify(postObj),
     })
       .then((response) => response.json())
-      .then((data) => console.log('Finished fetching.'));
+      .then((data) => console.log('Finished posting.'));
+  }
+
+  function loadBoard(event) {
+    event.preventDefault();
+    fetch(`http://localhost:3000/api/boards/${saveSlot}`, {
+      //Changing to POST, since cookies aren't sent on get
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => setBoardState(data))
   }
 
   function handleLogin(event) {
@@ -69,12 +83,16 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
       });
   }
 
+  //Selects load slot
   function selectLoad(event) {
     event.preventDefault();
     setLoadSlot(event.target.value);
     console.log('Currently selected load slot is now ' + event.target.value);
   }
 
+
+
+  //Selects random board from lexicon.
   async function randomizeBoard(event) {
     event.preventDefault();
     console.log('Loading board now.');
@@ -89,7 +107,11 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
       });
   }
 
-  function loadBoard(event) {
+
+
+
+  //Loads from lexicon.
+  function loadBoard2(event) {
     event.preventDefault();
     console.log('Loading board now.');
     fetch(`http://localhost:3000/api/load/${loadSlot}`)
@@ -100,12 +122,14 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
       });
   }
 
+  //Uploads to Lexicon.
   function submitBoard(event) {
     event.preventDefault();
     console.log('Submitting board...');
     console.log(event.target.value);
   }
 
+  //Uploads to Lexicon.
   async function uploadBoard(event) {
     event.preventDefault();
     console.log('Uploading board to server. ' + event.target);

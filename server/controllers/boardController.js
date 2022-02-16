@@ -29,7 +29,7 @@ boardController.saveBoard = async (req, res, next) => {
     const queryForSave = 'INSERT INTO lexicon (title, board, slot_no, user_id) VALUES (\'cool_board\', $1, $2, $3) RETURNING *;';
     const saveResult = await db.query(queryForSave, [board, saveSlot, userId]);
     console.log(saveResult);
-
+    res.locals.board = saveResult.rows[0].board;
 
   } else {
     return next();
@@ -42,10 +42,20 @@ boardController.randomizeBoard = (req, res, next) => {
   res.locals.randomizeBoard = generateBoard(blankBoard, req.params.id);
   return next();
 }
-
-boardController.loadBoard = (req, res, next) => {
+//
+boardController.loadBoard = async (req, res, next) => {
   console.log('logic for loadBoard');
-  const board = '';
+  console.log(req.cookies.cookie);
+  if (req.cookies){
+    const slot = req.params;
+    const user = req.cookies.cookie;
+    const query = `SELECT a.board FROM lexicon a
+    JOIN users b ON a.user_id = b.u_id
+    WHERE b.user_name = $1 AND a.slot_no = $2
+    ;`;
+    const saveResult = await db.query(query, [user, slot]);
+    res.locals.loadBoard = saveResult.rows[0].board;
+  }
   return next();
 }
 
