@@ -45,7 +45,16 @@ boardController.randomizeBoard = (req, res, next) => {
 
 boardController.loadBoard = (req, res, next) => {
   console.log('logic for loadBoard');
-  const board = '';
+  if (req.cookies){
+    const slot = req.body.saveSlot;
+    const user = req.cookies.cookie;
+    const query = `SELECT a.board FROM lexicon a
+    JOIN users b ON a.user_id = b.u_id
+    WHERE a.slot_no = $1
+    ;`;
+    const saveResult = await db.query(query, [slot]);
+    res.locals.board = JSON.parse(saveResult.rows[0].board);
+  }
   return next();
 }
 
