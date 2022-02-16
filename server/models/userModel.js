@@ -1,12 +1,13 @@
-const pkg = require('pg');
-const { Pool } = pkg;
-const dotenv = require('dotenv');
-dotenv.config();
+const { Pool } = require('pg');
+const PG_URI = 'postgres://pqilyecq:Yw1jGNSrnhU2HShzVcwo3nK1PF2oZxZx@kashin.db.elephantsql.com/pqilyecq';
 
-const URI = process.env.PG_URI;
-console.log('connecting to server');
-console.log(URI);
+const pool = new Pool({
+    connectionString: PG_URI
+});
 
-const pool = new Pool ({connectionString: URI});
-
-module.exports = pool;
+module.exports = {
+    query: (text, params, callback) => {
+        console.log('executed query', text);
+        return pool.query(text, params, callback);
+    }
+};
