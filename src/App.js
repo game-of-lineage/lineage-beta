@@ -11,6 +11,7 @@ import UserDash from "./components/userDash/userDash.jsx";
 
 const BOARD_WIDTH = 80;
 const BOARD_HEIGHT = 40;
+
 const aliveCells = new Set();
 
 
@@ -102,20 +103,22 @@ const runGame = (grid, aliveCells) => {
   const COLS = grid[0].length;
 
   // Update each Cell's nextGen value so that a new grid can be printed.
+  //If we noted past alive cells in the Set, only check around alive cells.
   if(aliveCells.size){
-
+    // instantiate Set iterator FROM CLONED SET
     const iterator = new Set(aliveCells).values()
-
+    // set current to iterator.next() *the first element in the set*
     let current = iterator.next()
-
-    console.log("using iterator from set with size", aliveCells.size)
+    // Clear original set, that's why we cloned.
     aliveCells.clear()
+    //iterate through set
     while(!current.done){
+      // turn stringified coordinate back into numbers
       const strings  = current.value.split(",")
       const row = Number(strings[0])
       const col = Number(strings[1])
 
-      
+      // update Cell and neighbors.
       updateCell(row, col);
       if (col > 0) updateCell(row, col-1)
       if (row > 0) updateCell(row-1, col)
@@ -126,17 +129,16 @@ const runGame = (grid, aliveCells) => {
       if (row < ROWS - 1 && col < COLS - 1) updateCell(row+1, col+1)
       if (row > 0 && col > 0) updateCell(row-1, col-1);
       
+      //increment current
       current = iterator.next()
-      // aliveCells.delete(row + "," + col)
     }
+    //if no set, loop through entire board.
   } else {
-    
-    console.log("using forLoop")
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLS; col++) {
-        updateCell(row, col);
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+          updateCell(row, col);
+        }
       }
-    }
   }
 
   // Function calculates number of neighbors (8) that are 1s. Based on number of neighbors,
