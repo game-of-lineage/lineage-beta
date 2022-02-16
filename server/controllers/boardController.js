@@ -29,7 +29,7 @@ boardController.saveBoard = async (req, res, next) => {
     const queryForSave = 'INSERT INTO lexicon (title, board, slot_no, user_id) VALUES (\'cool_board\', $1, $2, $3) RETURNING *;';
     const saveResult = await db.query(queryForSave, [board, saveSlot, userId]);
     console.log(saveResult);
-
+    res.locals.board = saveResult.rows[0].board;
 
   } else {
     return next();
@@ -53,7 +53,7 @@ boardController.loadBoard = (req, res, next) => {
     WHERE a.slot_no = $1
     ;`;
     const saveResult = await db.query(query, [slot]);
-    res.locals.board = JSON.parse(saveResult.rows[0].board);
+    res.locals.loadBoard = JSON.parse(saveResult.rows[0].board);
   }
   return next();
 }

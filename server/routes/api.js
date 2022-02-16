@@ -62,7 +62,7 @@ router.get('/boards/:id', loadBoard, (req, res) => {
 //     "Save a Board"
 router.post('/boards', saveBoard, (req, res) => {
   console.log('Received request to save board.');
-  res.json();
+  res.json(res.locals.board);
 });
 
 // LEXICON ROUTES
