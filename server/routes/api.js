@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {login, signup} = require('../controllers/userController')
-const {saveBoard, loadBoard, postBoard, loadBoardFromLexicon} = require('../controllers/boardController')
+const {saveBoard, loadBoard, randomizeBoard, postBoard, loadBoardFromLexicon} = require('../controllers/boardController')
 
 // Initial load fetch
 router.get('/', (req, res) => {
@@ -12,23 +12,40 @@ router.get('/', (req, res) => {
 // ***USER ROUTES***
 
 //    "Log In"
-router.post('/users/login', login, (req, res) => {
-
-});
+router.post('/users/login', login, (req, res, error) => {
+    if (res.locals.userInformation){
+        res.status(200).json(`user found ${res.locals.userInformation.user_name}`)
+    } else {
+        console.log('Could not find user');
+        res.status(404).json(`User not found ${error}`)
+    }
+})
 
 //    "Sign Up"
-router.post('/users/signup', signup, (req, res) => {
-
-});
+router.post('/users/signup', signup, (req, res, error) => {
+    if (res.locals.newUser){
+        res.status(201).json(`new user created ${res.locals.newUser.user_name}`)
+    } else {
+        console.log('Error creating user');
+        res.render(`Error creating user ${error}`)
+    }
+})
 
 // ***BOARD ROUTES***
 
 //    "Load a Board"
+router.get('/randomize/:id', randomizeBoard, (req, res) => {
+  console.log('Received request to load board.');
+  //console.log(res.locals.loadBoard);
+  res.json(res.locals.randomizeBoard);
+});
+
 router.get('/boards/:id', loadBoard, (req, res) => {
   console.log('Received request to load board.');
   //console.log(res.locals.loadBoard);
   res.json(res.locals.loadBoard);
 });
+
 
 //     "Save a Board"
 router.post('/boards', saveBoard, (req, res) => {
