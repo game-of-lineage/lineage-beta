@@ -41,9 +41,13 @@ const ControlPanel = ({
       label: "10/sec",
     },
     {
-      value: 195,
+      value: 200,
       label: "20/sec",
     },
+    {
+      value: 490,
+      label: "50/sec",
+    }
   ];
 
   return (
@@ -77,7 +81,10 @@ const ControlPanel = ({
       </button>
       {/* Pause and go back to initial input */}
       <button
-        onClick={() => setBoardState(initialBoardState.map((row) => [...row]))}
+        onClick={() => {
+          setPlay(false)
+          setBoardState(initialBoardState.map((row) => [...row]))
+        }}
       >
         <FaBackward />
         &nbsp;&nbsp;Reset
@@ -95,7 +102,7 @@ const ControlPanel = ({
             marks={marks}
             step={1}
             min={1}
-            max={200}
+            max={500}
             onChangeCommitted={(e) => handleSpeed(e)}
           />
         </div>
