@@ -147,45 +147,105 @@ const runGame = (grid, aliveCells) => {
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
+    } else {
+      const newRow = row < ROWS - 1 ? row + 1 : 0
+      const newCol = col < COLS - 1 ? col + 1 : 0
+      const neighbor = grid[newRow][newCol]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
     }
+
     if (col < COLS - 1) {
       const neighbor = grid[row][col + 1]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
+    } else {
+      const newCol = col < COLS - 1 ? col + 1 : 0
+      const neighbor = grid[row][newCol]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
     }
+
     if (row < ROWS - 1) {
       const neighbor = grid[row + 1][col]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
+    } else {
+      const newRow = row < ROWS - 1 ? row + 1 : 0
+      const newCol = col
+      const neighbor = grid[newRow][newCol]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
     }
+
     if (col < COLS - 1 && row > 0) {
       const neighbor = grid[row - 1][col + 1]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
+    } else {
+      const newRow = row > 0 ? row - 1 : ROWS - 1
+      const newCol = col < COLS - 1 ? col + 1 : 0
+      const neighbor = grid[newRow][newCol]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
     }
+
     if (row < ROWS - 1 && col > 0){
       const neighbor = grid[row + 1][col - 1]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
+    } else {
+      const newRow = row < ROWS - 1 ? row + 1 : 0
+      const newCol = col > 0 ? col - 1 : COLS - 1
+      const neighbor = grid[newRow][newCol]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
     }
+
     if (col > 0){
       const neighbor = grid[row][col - 1]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
-    } 
+    } else {
+      const newCol = col > 0 ? col - 1 : COLS - 1
+      const neighbor = grid[row][newCol]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
+
     if (row > 0){
       const neighbor = grid[row - 1][col]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
-    } 
+    } else {
+      const newRow = row > 0 ? col - 1 : ROWS - 1
+      const neighbor = grid[newRow][col]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    }
+
     if (row > 0 && col > 0){
       const neighbor = grid[row - 1][col - 1]
+      if (neighbor in tally) tally[neighbor]++
+      else tally[neighbor] = 1
+      neighborsAlive += neighbor ? 1 : 0;
+    } else {
+      const newRow = row > 0 ? row - 1 : ROWS - 1
+      const newCol = col > 0 ? col - 1 : COLS - 1
+      const neighbor = grid[newRow][newCol]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0;
@@ -193,34 +253,30 @@ const runGame = (grid, aliveCells) => {
 
     const addNeighbors = (row, col) => {
       aliveCells.add(row + "," + col);
-      if (row < ROWS - 1 && col < COLS - 1){
-        aliveCells.add(`${row + 1},${col + 1}`);
-      }
+      let newRow, newCol;
 
-      if (col < COLS - 1) {
-        aliveCells.add(`${row},${col + 1}`);
-      }
-      if (row < ROWS - 1) {
-        aliveCells.add(`${row + 1},${col}`);
-      }
+      newRow = row < ROWS - 1 ? row + 1 : 0
+      newCol = col < COLS - 1 ? col + 1 : 0
+      aliveCells.add(`${newRow},${newCol}`);
+      aliveCells.add(`${row},${newCol}`);
+      aliveCells.add(`${newRow},${col}`);
 
-      if (col < COLS - 1 && row > 0) {
-        aliveCells.add(`${row - 1},${col + 1}`);
-      }
-      if (row < ROWS - 1 && col > 0) {
-        aliveCells.add(`${row + 1},${col - 1}`);
-    }
+      newRow = row > 0 ? row - 1 : ROWS - 1
+      newCol = col < COLS - 1  ? col + 1 : 0
+      aliveCells.add(`${newRow},${newCol}`);
 
-      if (col > 0) {
-        aliveCells.add(`${row},${col - 1}`);
-      }
-      if (row > 0) {
-        aliveCells.add(`${row - 1},${col}`);
-      }
+      newRow = row < ROWS - 1 ? row + 1 : 0
+      newCol = col > 0 ? col - 1 : COLS - 1
+      aliveCells.add(`${newRow},${newCol}`);
 
-      if (row > 0 && col > 0) {
-        aliveCells.add(`${row - 1},${col - 1}`);
-      }
+
+      newRow = row > 0 ? row - 1 : ROWS - 1
+      newCol = col > 0 ? col - 1 : COLS - 1
+      aliveCells.add(`${newRow},${newCol}`);
+      aliveCells.add(`${row},${newCol}`);
+      aliveCells.add(`${newRow},${col}`);
+
+
     };
 
     // If dead
