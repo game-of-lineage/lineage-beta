@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {login, signup} = require('../controllers/userController')
-const {saveBoard, loadBoard, postBoard, loadBoardFromLexicon} = require('../controllers/boardController')
+const {saveBoard, loadBoard, randomizeBoard, postBoard, loadBoardFromLexicon} = require('../controllers/boardController')
 
 // Initial load fetch
 router.get('/', (req, res) => {
@@ -24,11 +24,18 @@ router.post('/users/signup', signup, (req, res) => {
 // ***BOARD ROUTES***
 
 //    "Load a Board"
+router.get('/randomize/:id', randomizeBoard, (req, res) => {
+  console.log('Received request to load board.');
+  //console.log(res.locals.loadBoard);
+  res.json(res.locals.randomizeBoard);
+});
+
 router.get('/boards/:id', loadBoard, (req, res) => {
   console.log('Received request to load board.');
   //console.log(res.locals.loadBoard);
   res.json(res.locals.loadBoard);
 });
+
 
 //     "Save a Board"
 router.post('/boards', saveBoard, (req, res) => {
