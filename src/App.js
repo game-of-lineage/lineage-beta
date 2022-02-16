@@ -39,11 +39,15 @@ const App = ({ name }) => {
 
    return (
       <>
-        <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
-        <UserDash initialBoardState={initialBoardState} boardState={boardState} setInitialBoardState={setInitialBoardState} setBoardState={setBoardState}/>
-        <div id='board'>
-        {boardState.map((row, idx) =>
-        <SquareRow row={row} style={{height: `${100/boardState.length}%`}} key={idx} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
+        <div id='main'>
+          <ControlPanel initialBoardState={initialBoardState} setBoardState={setBoardState} setTimer={setTimer} timer={timer} setPlay={setPlay} play={play}/>
+          <div id='board'>
+            {boardState.map((row, idx) =>
+            <SquareRow row={row} style={{height: `${100/boardState.length}%`}} key={idx} rowIndex={idx} boardState={boardState} setBoardState={setBoardState}/>)}
+          </div>
+        </div>
+        <div id='footer'>
+          <UserDash initialBoardState={initialBoardState} boardState={boardState} setInitialBoardState={setInitialBoardState} setBoardState={setBoardState}/>
         </div>
       </>
     );
