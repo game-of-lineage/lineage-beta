@@ -42,18 +42,19 @@ boardController.randomizeBoard = (req, res, next) => {
   res.locals.randomizeBoard = generateBoard(blankBoard, req.params.id);
   return next();
 }
-
-boardController.loadBoard = (req, res, next) => {
+//
+boardController.loadBoard = async (req, res, next) => {
   console.log('logic for loadBoard');
+  console.log(req.cookies.cookie);
   if (req.cookies){
-    const slot = req.body.saveSlot;
+    const slot = req.params;
     const user = req.cookies.cookie;
     const query = `SELECT a.board FROM lexicon a
     JOIN users b ON a.user_id = b.u_id
-    WHERE a.slot_no = $1
+    WHERE b.user_name = $1 AND a.slot_no = $2
     ;`;
-    const saveResult = await db.query(query, [slot]);
-    res.locals.loadBoard = JSON.parse(saveResult.rows[0].board);
+    const saveResult = await db.query(query, [user, slot]);
+    res.locals.loadBoard = saveResult.rows[0].board;
   }
   return next();
 }

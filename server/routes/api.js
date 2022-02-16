@@ -52,7 +52,7 @@ router.get('/randomize/:id', randomizeBoard, (req, res) => {
   res.status(200).json(res.locals.randomizeBoard);
 });
 
-router.get('/boards/:id', loadBoard, (req, res) => {
+router.post('/boards/:id', loadBoard, (req, res) => {
   console.log('Received request to load board.');
   //console.log(res.locals.loadBoard);
   res.status(200).json(res.locals.loadBoard);
