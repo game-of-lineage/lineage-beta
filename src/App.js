@@ -136,170 +136,68 @@ const runGame = (grid, aliveCells) => {
   // Function calculates number of neighbors (8) that are 1s. Based on number of neighbors,
   // this function sets the aliveNextGen value of the cell.
   function updateCell(row, col) {
-    let alive = grid[row][col];
+
     let neighborsAlive = 0;
-
-    let child;
     const tally = {}
-
-    if (row < ROWS - 1 && col < COLS - 1) {
-      const neighbor = grid[row + 1][col + 1]
+    
+    const up = row > 0 ? row - 1 : ROWS - 1
+    const down = row < ROWS - 1 ? row + 1 : 0
+    const right = col < COLS - 1 ? col + 1 : 0
+    const left = col > 0 ? col - 1 : COLS - 1
+    
+    const tallyNeighbor = (x, y) => {
+      const neighbor = grid[x][y]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newRow = row < ROWS - 1 ? row + 1 : 0
-      const newCol = col < COLS - 1 ? col + 1 : 0
-      const neighbor = grid[newRow][newCol]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
+      neighborsAlive += neighbor ? 1 : 0
     }
 
-    if (col < COLS - 1) {
-      const neighbor = grid[row][col + 1]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newCol = col < COLS - 1 ? col + 1 : 0
-      const neighbor = grid[row][newCol]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    }
-
-    if (row < ROWS - 1) {
-      const neighbor = grid[row + 1][col]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newRow = row < ROWS - 1 ? row + 1 : 0
-      const newCol = col
-      const neighbor = grid[newRow][newCol]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    }
-
-    if (col < COLS - 1 && row > 0) {
-      const neighbor = grid[row - 1][col + 1]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newRow = row > 0 ? row - 1 : ROWS - 1
-      const newCol = col < COLS - 1 ? col + 1 : 0
-      const neighbor = grid[newRow][newCol]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    }
-
-    if (row < ROWS - 1 && col > 0){
-      const neighbor = grid[row + 1][col - 1]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newRow = row < ROWS - 1 ? row + 1 : 0
-      const newCol = col > 0 ? col - 1 : COLS - 1
-      const neighbor = grid[newRow][newCol]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    }
-
-    if (col > 0){
-      const neighbor = grid[row][col - 1]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newCol = col > 0 ? col - 1 : COLS - 1
-      const neighbor = grid[row][newCol]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    }
-
-    if (row > 0){
-      const neighbor = grid[row - 1][col]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newRow = row > 0 ? col - 1 : ROWS - 1
-      const neighbor = grid[newRow][col]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    }
-
-    if (row > 0 && col > 0){
-      const neighbor = grid[row - 1][col - 1]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    } else {
-      const newRow = row > 0 ? row - 1 : ROWS - 1
-      const newCol = col > 0 ? col - 1 : COLS - 1
-      const neighbor = grid[newRow][newCol]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0;
-    }
-
+    tallyNeighbor(up, col)
+    tallyNeighbor(up, right)
+    tallyNeighbor(row, right)
+    tallyNeighbor(down, right)
+    tallyNeighbor(down, col)
+    tallyNeighbor(down, left)
+    tallyNeighbor(row, left)
+    tallyNeighbor(up, left)
+    
+    
     const addNeighbors = (row, col) => {
-      aliveCells.add(row + "," + col);
-      let newRow, newCol;
-
-      newRow = row < ROWS - 1 ? row + 1 : 0
-      newCol = col < COLS - 1 ? col + 1 : 0
-      aliveCells.add(`${newRow},${newCol}`);
-      aliveCells.add(`${row},${newCol}`);
-      aliveCells.add(`${newRow},${col}`);
-
-      newRow = row > 0 ? row - 1 : ROWS - 1
-      newCol = col < COLS - 1  ? col + 1 : 0
-      aliveCells.add(`${newRow},${newCol}`);
-
-      newRow = row < ROWS - 1 ? row + 1 : 0
-      newCol = col > 0 ? col - 1 : COLS - 1
-      aliveCells.add(`${newRow},${newCol}`);
-
-
-      newRow = row > 0 ? row - 1 : ROWS - 1
-      newCol = col > 0 ? col - 1 : COLS - 1
-      aliveCells.add(`${newRow},${newCol}`);
-      aliveCells.add(`${row},${newCol}`);
-      aliveCells.add(`${newRow},${col}`);
-
-
+      aliveCells.add(`${row},${col}`);
+      aliveCells.add(`${up},${col}`);
+      aliveCells.add(`${up},${right}`);
+      aliveCells.add(`${row},${right}`);
+      aliveCells.add(`${down},${right}`);
+      aliveCells.add(`${down},${col}`);
+      aliveCells.add(`${down},${left}`);
+      aliveCells.add(`${row},${left}`);
+      aliveCells.add(`${up},${left}`);
     };
+    
+    let alive = grid[row][col];
+    let child;
 
     // If dead
     if (!alive) {
       if (neighborsAlive === 3) {
-        const arr =[]
         for(const key in tally){
-          if (key === '0') continue;
-          if (tally[key] > 1) child = Number(key)
-          arr.push(Number(key))
+          if (tally[key] > 1 && key !== '0') 
+            child = Number(key);
         }
-        // newBoard[row][col] = child || arr[Math.floor(Math.random()*3)]
         newBoard[row][col] = child || Math.floor(Math.random()*24)+1
         addNeighbors(row, col);
       }
+      return
     }
+
     // If alive
     if (alive) {
       if (neighborsAlive === 2 || neighborsAlive === 3) {
         addNeighbors(row, col);
-      } else {
-        newBoard[row][col] = 0;
-      }
+        return
+      } 
+      newBoard[row][col] = 0;
+      return
     }
   }
   
