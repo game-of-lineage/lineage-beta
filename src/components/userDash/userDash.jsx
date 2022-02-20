@@ -172,53 +172,66 @@ const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoar
     <div id='saveload'>
       {' '}
       {!userCookie ? (
-        <form id='loginBox'>
-            <label htmlFor='logintext'>Username:</label>
-            <input type='text'></input>
-            <label htmlFor='password'>Password:</label>
-            <input type='password'></input>
+        <form className='loginBox'>
+            <div className='set'>
+              <label htmlFor='logintext'>Username:</label>
+              <input type='text'></input>
+            </div>
+            <div className='set'>
+              <label htmlFor='password'>Password:</label>
+              <input type='password'></input>
+            </div>
+            
             <button type='button' onClick={handleLogin}>
               Log In
             </button>
-        </form>
-      ) : (
-        <form>
-          <div className='storage'>
-            <div>Hello,</div>
-            <div>{userCookie}</div>
-
-          </div>
-          <br />
-          <div className='storage wide'>
-            <div>
-              <label for='save'>Save Board:</label>
-              <select name='savefiles' id='save' onChange={selectSave} defaultValue='default'>
-                <option value='default' disabled>Select Save Slot</option>
-                {saveoptions}
-              </select>
-              <button name='savefiles' id='savebutton' onClick={saveBoard} type='button'>
-                Save
-              </button>
-            </div>
-            <div>
-              <label for='load'>Load Board:</label>
-              <select name='load' id='load' onChange={selectLoad} defaultValue='default'>
-                <option value='default'>Select Load Slot</option>
-                {loadoptions}
-              </select>
-              <button name='loadButton' type='button' onClick={loadBoard}>Load</button>
-            </div>
-          </div>
-          <div className='storage'>
-            <div>
-              <label for='random'>Randomize:</label>
+            <div className='set'>
               <button name='randomfiles' id='randomButton' onClick={randomizeBoard}>
                 Randomize
               </button>
             </div>
-            <div>
-              <label for='upload'>Upload Board:</label>
-              <button name='uploadfiles' id='upload' onClick={uploadBoard}>
+        </form>
+      ) : (
+        <form>
+          <div className='storage' >
+            <div className='greeting'>Hello,</div>
+            <div className='greeting'>&nbsp;{userCookie}</div>
+          </div>
+          <br />
+          <div className='storage wide'>
+            <div className='outerSet'>
+              <div className='set'>
+                <label htmlFor='save'>Save Board:</label>
+                <select name='savefiles' id='save' onChange={selectSave} defaultValue='default'>
+                  <option value='default' disabled>Select Save Slot</option>
+                  {saveoptions}
+                </select>
+              </div>
+              <button name='savefiles' id='savebutton' onClick={saveBoard} type='button'>
+                Save
+              </button>
+            </div>
+            <div className='outerSet'>
+              <div className='set'>
+                <label htmlFor='load'>Load Board:</label>
+                <select name='load' id='load' onChange={selectLoad} defaultValue='default'>
+                  <option value='default' disabled>Select Load Slot</option>
+                  {loadoptions}
+                </select>
+              </div>
+              <button name='loadButton' type='button' onClick={loadBoard}>Load</button>
+            </div>
+          </div>
+          <div className='storage'>
+            <div className='set'>
+              {/* <label htmlFor='random'>Randomize:</label> */}
+              <button name='randomfiles' id='randomButton' style={{marginTop: "auto"}} onClick={randomizeBoard}>
+                Randomize
+              </button>
+            </div>
+            <div className='set'>
+              {/* <label htmlFor='upload'>Upload Board:</label> */}
+              <button name='uploadfiles' id='upload' style={{marginTop: "auto"}} onClick={uploadBoard}>
                 Upload
               </button>
             </div>

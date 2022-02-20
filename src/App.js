@@ -70,8 +70,9 @@ const App = ({ name }) => {
           setPlay={setPlay}
           play={play}
         />
-        <div id="board">
-          {boardState.map((row, idx) => (
+        <div className="board-container">
+          <div id="board">
+            {boardState.map((row, idx) => (
             <SquareRow
               row={row}
               key={idx}
@@ -79,17 +80,16 @@ const App = ({ name }) => {
               BOARD_HEIGHT={BOARD_HEIGHT}
               rowIndex={idx}
               handleSquareClick={handleSquareClick}
+              />
+            ))}
+          </div>
+            <UserDash
+              initialBoardState={initialBoardState}
+              boardState={boardState}
+              setInitialBoardState={setInitialBoardState}
+              setBoardState={setBoardState}
             />
-          ))}
         </div>
-      </div>
-      <div id="footer">
-        <UserDash
-          initialBoardState={initialBoardState}
-          boardState={boardState}
-          setInitialBoardState={setInitialBoardState}
-          setBoardState={setBoardState}
-        />
       </div>
     </>
   );

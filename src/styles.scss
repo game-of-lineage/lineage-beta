@@ -14,9 +14,8 @@ body {
 
 #main{
   display: flex;
-  height: 80%;
+  height: 90%;
   z-index: 2;
-  justify-content: space-evenly;
 }
 #footer{
   display: flex;
@@ -24,15 +23,24 @@ body {
   margin: 10px;
   height: 10%;
 }
-
-#board{
+.board-container{
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
   height: 100%;
-  width: 75%;
+  width: 80%;
+}
+#board{
+  height: 85%;
+  width: 100%;
   box-shadow: 0px 0px 2px $white;
   z-index: -1;
 }
 
 .speedSliderContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   h2{
     margin: 5px;
   }
