@@ -8,6 +8,7 @@
     justify-content: center;
     align-items: center;
     border: 2px solid $lightblue;
+    z-index: 1;
     margin: -2px;
     &:hover {
         cursor: crosshair;
@@ -16,7 +17,7 @@
         position: absolute;
         flex-shrink: 0;
         max-height: 100%;
-        z-index: 1;
+        z-index: 2;
         -khtml-user-select: none;
         -o-user-select: none;
         -moz-user-select: none;

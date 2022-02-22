@@ -9,19 +9,18 @@ import { useState, useEffect, useCallback } from "react";
 import simulateBoard from "./utils/simulateBoard.js";
 import UserDash from "./components/userDash/userDash.jsx";
 
-const BOARD_WIDTH = 60;
-const BOARD_HEIGHT = 30;
 const aliveCells = new Set();
 
 const App = ({ name }) => {
-  // Version without simulation - commented out.
-  //const [initialBoardState, setInitialBoardState] = useState((new Array(50).fill(new Array(100).fill(0)));
-  //const [boardState, setBoardState] = useState((new Array(50).fill(new Array(100).fill(0)));
+
+  const [BOARD_HEIGHT, SET_BOARD_HEIGHT] = useState(40)
+  const [BOARD_WIDTH, SET_BOARD_WIDTH] = useState(80)
+
   const [initialBoardState, setInitialBoardState] = useState(
-    simulateBoard(new Array(BOARD_HEIGHT).fill(new Array(BOARD_WIDTH).fill(0)))
+    new Array(BOARD_WIDTH*BOARD_HEIGHT).fill(0)
   );
   const [boardState, setBoardState] = useState(
-    simulateBoard(new Array(BOARD_HEIGHT).fill(new Array(BOARD_WIDTH).fill(0)))
+    new Array(BOARD_WIDTH*BOARD_HEIGHT).fill(0)
   );
 
   const [tick, setTick] = useState(true);
@@ -30,10 +29,10 @@ const App = ({ name }) => {
   const [generation, setGeneration] = useState(0);
   const [squareClicked, setSquareClicked] = useState(false);
 
+  
   useEffect(() => {
     if (play) {
-      const newBoardState = runGame(boardState, aliveCells);
-      setBoardState(newBoardState);
+      setBoardState(runGame(boardState, aliveCells, BOARD_HEIGHT, BOARD_WIDTH));
       setTimeout(() => {
         setGeneration(generation + 1);
         setTick(!tick);
@@ -43,21 +42,39 @@ const App = ({ name }) => {
 
   useEffect(() => {
     aliveCells.clear();
-    if (play) setInitialBoardState(boardState.map((row) => [...row]));
+    if (play) setInitialBoardState([...boardState]);
   }, [play]);
 
   const handleSquareClick = useCallback(
     (row, col) => {
       if (!play) {
         aliveCells.clear();
-        let newBoardState = boardState.map((row) => [...row]);
-        newBoardState[row][col] = newBoardState[row][col] ? 0 : Math.ceil(Math.random()*24);
+        const pos = col + row * BOARD_WIDTH
+        let newBoardState = [...boardState];
+        newBoardState[pos] = newBoardState[pos] ? 0 : Math.ceil(Math.random()*24);
         setSquareClicked(!squareClicked);
         setBoardState(newBoardState);
       }
     },
     [squareClicked, play]
   );
+
+  const rows = []
+
+  for(let i = 0; i < BOARD_HEIGHT; i++){
+    const left = i * BOARD_WIDTH
+    const right = i * BOARD_WIDTH + BOARD_WIDTH
+    rows.push(
+    <SquareRow
+      row={boardState.slice(left, right)}
+      key={i}
+      BOARD_WIDTH={BOARD_WIDTH}
+      BOARD_HEIGHT={BOARD_HEIGHT}
+      rowIndex={i}
+      handleSquareClick={handleSquareClick}
+    />)
+  }
+
 
   return (
     <>
@@ -72,16 +89,7 @@ const App = ({ name }) => {
         />
         <div className="board-container">
           <div id="board">
-            {boardState.map((row, idx) => (
-            <SquareRow
-              row={row}
-              key={idx}
-              BOARD_WIDTH={BOARD_WIDTH}
-              BOARD_HEIGHT={BOARD_HEIGHT}
-              rowIndex={idx}
-              handleSquareClick={handleSquareClick}
-              />
-            ))}
+            {rows}
           </div>
             <UserDash
               initialBoardState={initialBoardState}
@@ -95,58 +103,37 @@ const App = ({ name }) => {
   );
 };
 
-const runGame = (grid, aliveCells) => {
-  /* Constants */
-  const newBoard = grid.map((row) => [...row]);
-
-  const ROWS = grid.length;
-  const COLS = grid[0].length;
-
-  // Update each Cell's nextGen value so that a new grid can be printed.
-  //If we noted past alive cells in the Set, only check around alive cells.
-  if (aliveCells.size) {
-    // instantiate Set iterator FROM CLONED SET
-    const iterator = new Set(aliveCells).values();
-    // set current to iterator.next() *the first element in the set*
-    let current = iterator.next();
-    // Clear original set, that's why we cloned.
-    aliveCells.clear();
-    //iterate through set
-    while (!current.done) {
-      // turn stringified coordinate back into numbers
-      const strings = current.value.split(",");
-      const row = Number(strings[0]);
-      const col = Number(strings[1]);
-
-      // update Cell and neighbors.
-      updateCell(row, col);
-
-      //increment current
-      current = iterator.next();
+const runGame = (grid, aliveCells, ROWS, COLS) => {
+  const newBoard = [...grid]; 
+  
+  if (aliveCells.size) {                               // If we noted past alive cells in the Set, only check around alive cells.
+    const iterator = new Set(aliveCells).values();     // Instantiate Set iterator FROM CLONED SET
+    let current = iterator.next();                     // Set current to first element
+    aliveCells.clear();                                // Clear original set, that's why we cloned.
+    while (!current.done) {                            // Iterate through set
+      const pos = Number(current.value);               // Turn stringified coordinate back into numbers
+      updateCell(pos);                                 // Update Cell and neighbors.
+      current = iterator.next();                       // Increment current
     }
-    //if no set, loop through entire board.
-  } else {
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLS; col++) {
-        updateCell(row, col);
-      }
-    }
+  } else {                                             // If no set, loop through entire board.
+    for (const pos in grid) updateCell(pos);
   }
 
-  // Function calculates number of neighbors (8) that are 1s. Based on number of neighbors,
-  // this function sets the aliveNextGen value of the cell.
-  function updateCell(row, col) {
-
+  function updateCell(pos) {
     let neighborsAlive = 0;
     const tally = {}
     
+    const row = Math.floor(pos / COLS)
+    const col = pos % COLS
+
     const up = row > 0 ? row - 1 : ROWS - 1
     const down = row < ROWS - 1 ? row + 1 : 0
     const right = col < COLS - 1 ? col + 1 : 0
     const left = col > 0 ? col - 1 : COLS - 1
     
     const tallyNeighbor = (x, y) => {
-      const neighbor = grid[x][y]
+      const pos = y + COLS * x
+      const neighbor = grid[pos]
       if (neighbor in tally) tally[neighbor]++
       else tally[neighbor] = 1
       neighborsAlive += neighbor ? 1 : 0
@@ -162,41 +149,44 @@ const runGame = (grid, aliveCells) => {
     tallyNeighbor(up, left)
     
     
-    const addNeighbors = (row, col) => {
-      aliveCells.add(`${row},${col}`);
-      aliveCells.add(`${up},${col}`);
-      aliveCells.add(`${up},${right}`);
-      aliveCells.add(`${row},${right}`);
-      aliveCells.add(`${down},${right}`);
-      aliveCells.add(`${down},${col}`);
-      aliveCells.add(`${down},${left}`);
-      aliveCells.add(`${row},${left}`);
-      aliveCells.add(`${up},${left}`);
+    const addNeighbors = (x, y) => {
+      addNeighbor(row, col);
+      addNeighbor(up, col);
+      addNeighbor(up, right);
+      addNeighbor(row, right);
+      addNeighbor(down, right);
+      addNeighbor(down, col);
+      addNeighbor(down, left);
+      addNeighbor(row, left);
+      addNeighbor(up, left);
     };
+
+    const addNeighbor = (x, y) => {
+      const pos = y + COLS * x
+      aliveCells.add(pos);
+    }
     
-    let alive = grid[row][col];
+    let alive = grid[pos];
     let child;
 
-    // If dead
     if (!alive) {
       if (neighborsAlive === 3) {
         for(const key in tally){
           if (tally[key] > 1 && key !== '0') 
             child = Number(key);
         }
-        newBoard[row][col] = child || Math.floor(Math.random()*24)+1
+        newBoard[pos] = child || Math.floor(Math.random()*24)+1
         addNeighbors(row, col);
       }
       return
     }
 
-    // If alive
     if (alive) {
       if (neighborsAlive === 2 || neighborsAlive === 3) {
         addNeighbors(row, col);
         return
       } 
-      newBoard[row][col] = 0;
+      newBoard[pos] = 0;
       return
     }
   }

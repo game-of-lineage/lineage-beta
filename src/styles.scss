@@ -27,6 +27,7 @@ body {
   display: flex;
   flex-direction: column;
   align-content: space-between;
+  z-index: -1;
   height: 100%;
   width: 80%;
 }

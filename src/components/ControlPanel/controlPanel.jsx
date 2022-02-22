@@ -75,7 +75,16 @@ const ControlPanel = ({
       <button
         onClick={() => {
           setPlay(false)
-          setBoardState(initialBoardState.map((row) => [...row]))
+          setBoardState([...initialBoardState])
+        }}
+      >
+        <FaBackward />
+        &nbsp;&nbsp;Reset
+      </button>
+      <button
+        onClick={() => {
+          setPlay(false)
+          setBoardState([...initialBoardState])
         }}
       >
         <FaBackward />

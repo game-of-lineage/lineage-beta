@@ -29,7 +29,6 @@ import weedle from "../../pokemon/weedle.png";
 import zubat from "../../pokemon/zubat.png";
 
 const pokemonArray = [
-
   beedrill,
   caterpie,
   charizard,
@@ -66,14 +65,13 @@ const Square = ({
   handleSquareClick,
 }) => {
   // sets state of node for whether it's alive or dead, starts as dead
-
   return (
     <div
       onClick={() => {
         handleSquareClick(rowIndex, columnIndex);
       }}
       style={{ width: `${100 / BOARD_WIDTH}%` }}
-      className={alive ? `alive` : "dead"}
+      className={alive ? "alive" : "dead"}
     >
       {alive !== 0 && <img src={pokemonArray[alive-1]}></img>}
     </div>

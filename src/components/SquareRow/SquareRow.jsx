@@ -9,8 +9,6 @@ const SquareRow = ({row, rowIndex, BOARD_HEIGHT, BOARD_WIDTH, handleSquareClick}
 
     return (
             <div className="row-container" style={{minHeight: `${100/BOARD_HEIGHT}%`, maxHeight: `${100/BOARD_HEIGHT}%`}}> 
-                {/* Mapping the passed in array of Nodes and rendering them each here,
-                will keep them arranged in scss grid or flexbox, not sure yet*/}
                 {row.map((alive, idx) => 
                 <Square 
                     key={idx} 
