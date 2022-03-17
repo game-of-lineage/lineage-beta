@@ -12,6 +12,19 @@
   min-width: 150px;
   padding: 0 10px;
   margin: 0 0 0 10px;
+  .sizeButtons{
+    display: flex;
+    height: 5%;
+    justify-content: space-between;
+    button{
+      display: flex;
+      height: 100%;
+      width: 30%;
+      justify-content: center;
+      align-items: center;
+      font-size: large;
+    }
+  }
   button {
     display: flex;
     justify-content: center;
@@ -48,6 +61,7 @@
     }
   }
   .speedSlider {
+    height: 80%;
     margin: 30px 25% 0 0;
   }
 }

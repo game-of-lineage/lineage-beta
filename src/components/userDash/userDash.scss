@@ -1,82 +1,101 @@
 @import '../../styleVariables.scss';
 
-#saveload{
+.userDash{
   display: flex;
-  width: 96%;
-  height: 8%;
-  margin-top: auto;
+  width: 100%;
+  height: 51px;
   color: $squirtle;
-  margin-left: -1px;
-  justify-content: center;
+  margin: 0 0 12px 1px;
+  justify-content: space-between;
   align-items: center;
-  background-color: $blue;
-  padding: 10px 2%;
-  border: 2px ridge $squirtle;
-  box-shadow: 0px 0px 2px $white;
-  .storage{
+  button{
+    cursor: pointer;
     display: flex;
+    height: 100%;
+    height: 75px;
+    margin: 0 10px 0 0px;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
+    background-color: $blue;
+    padding: 10px 2%;
+    border: 2px ridge $squirtle;
+    box-shadow: 0px 0px 2px $white;
+    color: $squirtle;
+  }
+
+  #saveload{
+    background-color: $blue;
+    padding: 10px 2%;
+    border: 2px ridge $squirtle;
+    box-shadow: 0px 0px 2px $white;
+    width: 86%;
+    height: 100%;
+    label{
+      margin-left: 5px;
+    }
+    .storage{
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      button{
+        width: 80px;
+        height: 50%;
+      }
+    }
+    .greeting{
+      margin-bottom: 5%;
+      font-size: larger;
+    }
+    .wide{
+      justify-content: space-between;
+      width: 80%;
+    }
+    .loginBox{
+      align-items: center;
+    }
+    form{
+      display: flex;
+      width: 100%;
+      height: 100%;
+      justify-content: space-between;
+      input{
+        padding: 4px 0;
+        padding-left: 5px;
+        border: none;
+        border-radius: 15px
+      }
+      select{
+        height: 80%;
+        padding: 5px;
+        color: $squirtle;
+        border: 1px solid $squirtle;
+        background-color: $darkblue;
+        box-shadow: 0px 0px 3px $white;
+      }
+      .outerSet{
+        display: flex;
+        align-items: flex-end;
+      }
+      .set{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-content: center;
+      }
+    }
     button{
-      width: 80px;
-      height: 50%;
-    }
-  }
-  .greeting{
-    margin-bottom: 5%;
-    font-size: larger;
-  }
-  .wide{
-    justify-content: space-evenly;
-    width: 500px;
-  }
-  .loginBox{
-    align-items: flex-end;
-  }
-  form{
-    margin-bottom: 8px;
-    display: flex;
-    width: 100%;
-    justify-content: space-evenly;
-    align-items: flex-end;
-    input{
-      padding: 4px 0;
-      padding-left: 5px;
-      border: none;
-      border-radius: 15px
-    }
-    select{
+      display: flex;
       height: 80%;
+      margin: 0 5px;
+      justify-content: center;
+      align-items: center;
+      width: 120px;
+      cursor: pointer;
+      background-color: $darkblue;
       padding: 5px;
       color: $squirtle;
       border: 1px solid $squirtle;
-      background-color: $darkblue;
       box-shadow: 0px 0px 3px $white;
     }
-    .outerSet{
-      display: flex;
-      align-items: flex-end;
-    }
-    .set{
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-content: center;
-    }
-  }
-  button{
-    display: flex;
-    height: 80%;
-    margin: 0 5px;
-    justify-content: center;
-    align-items: center;
-    width: 80px;
-    cursor: pointer;
-    background-color: $darkblue;
-    padding: 5px;
-    color: $squirtle;
-    border: 1px solid $squirtle;
-    box-shadow: 0px 0px 3px $white;
   }
 }

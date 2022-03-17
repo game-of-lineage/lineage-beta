@@ -1,26 +1,20 @@
-import { hot } from "react-hot-loader/root";
 import React from "react";
 import "./styles.scss";
-import Square from "./components/Square/Square.jsx";
 import SquareRow from "./components/SquareRow/SquareRow.jsx";
 import ControlPanel from "./components/ControlPanel/controlPanel.jsx";
 import { useState, useEffect, useCallback } from "react";
-// import runGame from './runGame.js';
-import simulateBoard from "./utils/simulateBoard.js";
 import UserDash from "./components/userDash/userDash.jsx";
+import {runGame, clearCells} from "./utils/runGame";
 
-const aliveCells = new Set();
-
-const App = ({ name }) => {
-
-  const [BOARD_HEIGHT, SET_BOARD_HEIGHT] = useState(40)
-  const [BOARD_WIDTH, SET_BOARD_WIDTH] = useState(80)
+const App = () => {
+  const [BOARD_SIZE, SET_BOARD_SIZE] = useState(30);
 
   const [initialBoardState, setInitialBoardState] = useState(
-    new Array(BOARD_WIDTH*BOARD_HEIGHT).fill(0)
+    new Array(1800).fill(0)
   );
+  const [initialGeneration, setInitialGeneration] = useState(0)
   const [boardState, setBoardState] = useState(
-    new Array(BOARD_WIDTH*BOARD_HEIGHT).fill(0)
+    new Array(1800).fill(0)
   );
 
   const [tick, setTick] = useState(true);
@@ -28,30 +22,54 @@ const App = ({ name }) => {
   const [play, setPlay] = useState(false);
   const [generation, setGeneration] = useState(0);
   const [squareClicked, setSquareClicked] = useState(false);
+  const [tickId, setTickId] = useState(false)
 
-  
   useEffect(() => {
     if (play) {
-      setBoardState(runGame(boardState, aliveCells, BOARD_HEIGHT, BOARD_WIDTH));
-      setTimeout(() => {
+      setBoardState(
+        runGame(boardState)
+      );
+      const id = setTimeout(() => {
         setGeneration(generation + 1);
         setTick(!tick);
       }, timer);
+      setTickId(id)
+    } else {
+      clearTimeout(tickId)
     }
   }, [tick, play]);
 
+  // PAUSE/PLAY - Clears cached cells for algo optimization
+  // On Play "saves" initial board state, for future reset.
   useEffect(() => {
-    aliveCells.clear();
-    if (play) setInitialBoardState([...boardState]);
+    clearCells()
+    if (play) {
+      setInitialGeneration(generation)
+      setInitialBoardState([...boardState]);
+    }
   }, [play]);
+
+  // Board Size Changes - pause game, reset generation, reset board with new size.
+  useEffect(() => {
+    setBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
+    setInitialBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
+    setPlay(false);
+    setGeneration(0);
+    setInitialGeneration(0)
+  }, [BOARD_SIZE]);
+
+  // useCallBack for square clicks, 
+  // to prevent unneccesary rerenders when this function gets redefined
 
   const handleSquareClick = useCallback(
     (row, col) => {
       if (!play) {
-        aliveCells.clear();
-        const pos = col + row * BOARD_WIDTH
+        clearCells()
+        const pos = col + row * BOARD_SIZE * 2;
         let newBoardState = [...boardState];
-        newBoardState[pos] = newBoardState[pos] ? 0 : Math.ceil(Math.random()*24);
+        newBoardState[pos] = newBoardState[pos]
+          ? 0
+          : Math.ceil(Math.random() * 24);
         setSquareClicked(!squareClicked);
         setBoardState(newBoardState);
       }
@@ -59,139 +77,59 @@ const App = ({ name }) => {
     [squareClicked, play]
   );
 
-  const rows = []
+  const rows = [];
 
-  for(let i = 0; i < BOARD_HEIGHT; i++){
-    const left = i * BOARD_WIDTH
-    const right = i * BOARD_WIDTH + BOARD_WIDTH
+  for (let i = 0; i < BOARD_SIZE; i++) {
+    const width = BOARD_SIZE * 2;
+    const left = i * width;
+    const right = i * width + width;
     rows.push(
-    <SquareRow
-      row={boardState.slice(left, right)}
-      key={i}
-      BOARD_WIDTH={BOARD_WIDTH}
-      BOARD_HEIGHT={BOARD_HEIGHT}
-      rowIndex={i}
-      handleSquareClick={handleSquareClick}
-    />)
+      <SquareRow
+        row={boardState.slice(left, right)}
+        key={i}
+        BOARD_WIDTH={width}
+        BOARD_HEIGHT={BOARD_SIZE}
+        rowIndex={i}
+        handleSquareClick={handleSquareClick}
+      />
+    );
   }
-
-
   return (
     <>
       <div id="main">
         <ControlPanel
           initialBoardState={initialBoardState}
           setBoardState={setBoardState}
+          initialGeneration={initialGeneration}
+          setInitialGeneration={setInitialGeneration}
           setTimer={setTimer}
           timer={timer}
           setPlay={setPlay}
           play={play}
+          generation={generation}
+          setGeneration={setGeneration}
+          SET_BOARD_SIZE={SET_BOARD_SIZE}
         />
         <div className="board-container">
-          <div id="board">
-            {rows}
-          </div>
-            <UserDash
-              initialBoardState={initialBoardState}
-              boardState={boardState}
-              setInitialBoardState={setInitialBoardState}
-              setBoardState={setBoardState}
-            />
+          <div id="board">{rows}</div>
+          <UserDash
+            initialBoardState={initialBoardState}
+            boardState={boardState}
+            setInitialBoardState={setInitialBoardState}
+            setInitialGeneration={setInitialGeneration}
+            initialGeneration={initialGeneration}
+            setBoardState={setBoardState}
+            generation={generation}
+            setGeneration={setGeneration}
+            play={play}
+            setPlay={setPlay}
+          />
         </div>
       </div>
     </>
   );
 };
 
-const runGame = (grid, aliveCells, ROWS, COLS) => {
-  const newBoard = [...grid]; 
-  
-  if (aliveCells.size) {                               // If we noted past alive cells in the Set, only check around alive cells.
-    const iterator = new Set(aliveCells).values();     // Instantiate Set iterator FROM CLONED SET
-    let current = iterator.next();                     // Set current to first element
-    aliveCells.clear();                                // Clear original set, that's why we cloned.
-    while (!current.done) {                            // Iterate through set
-      const pos = Number(current.value);               // Turn stringified coordinate back into numbers
-      updateCell(pos);                                 // Update Cell and neighbors.
-      current = iterator.next();                       // Increment current
-    }
-  } else {                                             // If no set, loop through entire board.
-    for (const pos in grid) updateCell(pos);
-  }
 
-  function updateCell(pos) {
-    let neighborsAlive = 0;
-    const tally = {}
-    
-    const row = Math.floor(pos / COLS)
-    const col = pos % COLS
-
-    const up = row > 0 ? row - 1 : ROWS - 1
-    const down = row < ROWS - 1 ? row + 1 : 0
-    const right = col < COLS - 1 ? col + 1 : 0
-    const left = col > 0 ? col - 1 : COLS - 1
-    
-    const tallyNeighbor = (x, y) => {
-      const pos = y + COLS * x
-      const neighbor = grid[pos]
-      if (neighbor in tally) tally[neighbor]++
-      else tally[neighbor] = 1
-      neighborsAlive += neighbor ? 1 : 0
-    }
-
-    tallyNeighbor(up, col)
-    tallyNeighbor(up, right)
-    tallyNeighbor(row, right)
-    tallyNeighbor(down, right)
-    tallyNeighbor(down, col)
-    tallyNeighbor(down, left)
-    tallyNeighbor(row, left)
-    tallyNeighbor(up, left)
-    
-    
-    const addNeighbors = (x, y) => {
-      addNeighbor(row, col);
-      addNeighbor(up, col);
-      addNeighbor(up, right);
-      addNeighbor(row, right);
-      addNeighbor(down, right);
-      addNeighbor(down, col);
-      addNeighbor(down, left);
-      addNeighbor(row, left);
-      addNeighbor(up, left);
-    };
-
-    const addNeighbor = (x, y) => {
-      const pos = y + COLS * x
-      aliveCells.add(pos);
-    }
-    
-    let alive = grid[pos];
-    let child;
-
-    if (!alive) {
-      if (neighborsAlive === 3) {
-        for(const key in tally){
-          if (tally[key] > 1 && key !== '0') 
-            child = Number(key);
-        }
-        newBoard[pos] = child || Math.floor(Math.random()*24)+1
-        addNeighbors(row, col);
-      }
-      return
-    }
-
-    if (alive) {
-      if (neighborsAlive === 2 || neighborsAlive === 3) {
-        addNeighbors(row, col);
-        return
-      } 
-      newBoard[pos] = 0;
-      return
-    }
-  }
-  
-  return newBoard;
-};
 
 export default App;
