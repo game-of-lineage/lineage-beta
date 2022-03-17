@@ -63,8 +63,8 @@ const signup = async (username, password) => {
   try {
     const data = await dynamodb.putItem(signUpParams).promise();
     return buildResponse(200, signUpParams.Item);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log({ error, });
     return buildResponse(401, { message: "error creating new user" });
   }
 };

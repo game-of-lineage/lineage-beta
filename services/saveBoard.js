@@ -10,15 +10,9 @@ const dynamodb = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
 const boardTable = "lineage_boards";
 
 const saveBoard = async (event) => {
-  console.log({ eventbody: event.body });
-
   const { username, board_title, board } = JSON.parse(event.body);
 
-  console.log(username, board_title, board);
-
-  const created_at = new Date().toDateString();
-
-  console.log(created_at);
+  const created_at = new Date().toString();
 
   const params = {
     TableName: boardTable,
@@ -30,13 +24,11 @@ const saveBoard = async (event) => {
     },
   };
 
-  console.log(params);
   try {
     const response = await dynamodb.putItem(params).promise();
-    console.log(response);
     return buildResponse(200, response);
   } catch (error) {
-    console.log("ERROR:", error);
+    console.log({ error, });
     return buildResponse(401, { message: "error saving board" });
   }
 };

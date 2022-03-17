@@ -52,7 +52,6 @@ const UserDash = ({
   const handleLoad = (e) => {
     e.preventDefault();
     const idx = Number(loadSlot.current.value);
-    console.log(boards[idx].board.L);
     const loadedBoard = boards[idx].board.L.map((x) => Number(x.N));
     setBoardState(loadedBoard);
     setInitialBoardState(loadedBoard);
@@ -74,7 +73,6 @@ const UserDash = ({
     };
     const board = ddbFormat.board;
     const username = loggedIn;
-    console.log(board);
     axios
       .post(
         "https://g01j2dn4rh.execute-api.us-east-1.amazonaws.com/prod/boards",
