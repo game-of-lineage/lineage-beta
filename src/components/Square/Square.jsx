@@ -61,7 +61,7 @@ const Square = ({
   alive,
   rowIndex,
   columnIndex,
-  BOARD_WIDTH,
+  BOARD_SIZE,
   handleSquareClick,
 }) => {
   // sets state of node for whether it's alive or dead, starts as dead
@@ -70,7 +70,7 @@ const Square = ({
       onClick={() => {
         handleSquareClick(rowIndex, columnIndex);
       }}
-      style={{ width: `${100 / BOARD_WIDTH}%` }}
+      style={{ width: `${100 / (BOARD_SIZE*2)}%` }}
       className={alive ? "alive" : "dead"}
     >
       {alive !== 0 && <img src={pokemonArray[alive-1]}></img>}

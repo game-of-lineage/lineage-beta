@@ -11,6 +11,7 @@ const UserDash = ({
   initialBoardState,
   setBoardState,
   setInitialBoardState,
+  setInitialGeneration,
   generation,
   play,
   setPlay,
@@ -25,28 +26,38 @@ const UserDash = ({
   const [loggedIn, setLoggedIn] = useState(false);
   const [boards, setBoards] = useState([]);
 
+  const [loggingIn, setLoggingIn] = useState(false);
+
   //Selects random board from lexicon.
   function randomizeBoard(event) {
     event.preventDefault();
-    const figs = [
-      "block",
-      "beeHive",
-      "r-palomino",
-      "loaf",
-      "boat",
-      "tub",
-      "blinker",
-      "toad",
-      "beacon",
-      "glider",
-      "lwss",
-      "mwss",
-      "hwss",
-    ];
-    const rand = Math.floor(Math.random() * 12);
-    const newBoard = pasteFigure(initialBoardState, figures[figs[rand]]);
-    setRandom(figs[rand][0].toUpperCase() + figs[rand].slice(1));
-    setBoardState(newBoard);
+    console.log(event)
+    if(event.nativeEvent.pointerId === -1) {
+      handleLogin(event)
+      return false;
+    } else {
+
+      const figs = [
+        "block",
+        "beeHive",
+        "r-palomino",
+        "loaf",
+        "boat",
+        "tub",
+        "blinker",
+        "toad",
+        "beacon",
+        "glider",
+        "lwss",
+        "mwss",
+        "hwss",
+      ];
+      
+      const rand = Math.floor(Math.random() * 12);
+      const newBoard = pasteFigure(initialBoardState, figures[figs[rand]]);
+      setRandom(figs[rand][0].toUpperCase() + figs[rand].slice(1));
+      setBoardState(newBoard);
+    }
   }
 
   const handleLoad = (e) => {
@@ -92,6 +103,7 @@ const UserDash = ({
   const handleLogin = (e) => {
     const usernameField = username.current.value;
     const passwordField = password.current.value;
+    setLoggingIn(true);
     axios
       .post(
         "https://g01j2dn4rh.execute-api.us-east-1.amazonaws.com/prod/users",
@@ -102,8 +114,10 @@ const UserDash = ({
       )
       .then(() => {
         setLoggedIn(usernameField);
+        setLoggingIn(false);
       })
       .catch((error) => {
+        setLoggingIn(false);
         alert("Error Logging In", error);
       });
   };
@@ -139,26 +153,23 @@ const UserDash = ({
         Generation:
         <br /> {generation}
       </button>
+      {loggingIn === false ? (
+        <div id="saveload">
+          {loggedIn === false ? (
+            <form className="loginBox">
+              <div className="set">
+                <label htmlFor="logintext">Username:</label>
+                <input ref={username} type="text"></input>
+              </div>
+              <div className="set">
+                <label htmlFor="password">Password:</label>
+                <input ref={password} type="password"></input>
+              </div>
 
-      <div id="saveload">
-        {loggedIn === false ? (
-          <form className="loginBox">
-            <div className="set">
-              <label htmlFor="logintext">Username:</label>
-              <input ref={username} type="text"></input>
-            </div>
-            <div className="set">
-              <label htmlFor="password">Password:</label>
-              <input ref={password} type="password"></input>
-            </div>
-
-            <button type="button" onClick={handleLogin}>
-              Log In
-            </button>
-
-            <div className="set">
+              <button type="button" onClick={handleLogin}>
+                Log In
+              </button>
               <button
-                name="randomfiles"
                 id="randomButton"
                 onClick={randomizeBoard}
               >
@@ -166,67 +177,74 @@ const UserDash = ({
                 <br />
                 {random}
               </button>
-            </div>
-          </form>
-        ) : (
-          <form>
-            <div className="storage">
-              <div className="greeting">Hello,</div>
-              <div className="greeting">&nbsp;{loggedIn}</div>
-            </div>
-            <div className="storage wide">
-              <div className="outerSet">
-                <div className="set">
-                  <label htmlFor="savefiles">Board Title:</label>
-                  <input placeholder="Name your board" ref={saveTitle}></input>
-                </div>
-                <button
-                  name="savefiles"
-                  id="savebutton"
-                  onClick={handleSave}
-                  type="button"
-                >
-                  Save
-                </button>
+            </form>
+          ) : (
+            <form>
+              <div className="storage">
+                <div className="greeting">Hello,</div>
+                <div className="greeting">&nbsp;{loggedIn}</div>
               </div>
-              <div className="outerSet">
-                <div className="set">
-                  <label htmlFor="load">Load Board:</label>
-                  <select
-                    name="load"
-                    id="load"
-                    ref={loadSlot}
-                    defaultValue="default"
+              <div className="storage wide">
+                <div className="outerSet">
+                  <div className="set">
+                    <label htmlFor="savefiles">Board Title:</label>
+                    <input
+                      placeholder="Name your board"
+                      ref={saveTitle}
+                    ></input>
+                  </div>
+                  <button
+                    name="savefiles"
+                    id="savebutton"
+                    onClick={handleSave}
+                    type="button"
                   >
-                    <option value="default" disabled>
-                      Select Load Slot
-                    </option>
-                    {boards.map((board, idx) => (
-                      <option key={idx} value={idx}>
-                        {board.board_title.S}
-                      </option>
-                    ))}
-                  </select>
+                    Save
+                  </button>
                 </div>
-                <button name="loadButton" onClick={handleLoad} type="button">
-                  Load
-                </button>
+                <div className="outerSet">
+                  <div className="set">
+                    <label htmlFor="load">Load Board:</label>
+                    <select
+                      name="load"
+                      id="load"
+                      ref={loadSlot}
+                      defaultValue="default"
+                    >
+                      <option value="default" disabled>
+                        Select Load Slot
+                      </option>
+                      {boards.map((board, idx) => (
+                        <option key={idx} value={idx}>
+                          {board.board_title.S}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <button name="loadButton" onClick={handleLoad} type="button">
+                    Load
+                  </button>
+                </div>
+                <div className="set">
+                  <button
+                    name="randomfiles"
+                    id="randomButton"
+                    onClick={randomizeBoard}
+                  >
+                    Randomize:
+                    <br />
+                    {random}
+                  </button>
+                </div>
               </div>
-              <div className="set">
-                <button
-                  name="randomfiles"
-                  id="randomButton"
-                  onClick={randomizeBoard}
-                >
-                  Randomize:
-                  <br />
-                  {random}
-                </button>
-              </div>
-            </div>
-          </form>
-        )}
-      </div>
+            </form>
+          )}
+        </div>
+      ) : (
+        <div id="saveload">
+          <div className="loggingIn">Logging In...</div>
+        </div>
+      )}
     </div>
   );
 };

@@ -27,6 +27,7 @@ const ControlPanel = ({
   setGeneration,
   initialGeneration,
   SET_BOARD_SIZE,
+  BOARD_SIZE,
 }) => {
 
   const [openRules, setOpenRules] = useState(false);
@@ -70,6 +71,18 @@ const ControlPanel = ({
         </AccordionDetails>
       </Accordion>
       {/* Start/stop Algo */}
+      {play === true ?
+        <button
+        className="selected"
+        onClick={() => {
+          setPlay(!play);
+        }}
+      >
+        <FaPlay />
+        <FaPause />
+        &nbsp;&nbsp; Playing
+      </button>
+      :
       <button
         onClick={() => {
           setPlay(!play);
@@ -77,8 +90,9 @@ const ControlPanel = ({
       >
         <FaPlay />
         <FaPause />
-        &nbsp;&nbsp;Start/Stop
+        &nbsp;&nbsp; Paused
       </button>
+      }
       {/* Pause and go back to initial input */}
       <button
         onClick={() => {
@@ -91,9 +105,18 @@ const ControlPanel = ({
         &nbsp;&nbsp;Reset
       </button>
       <div className="sizeButtons">
+        {BOARD_SIZE === 30 ? 
+        <button className="selected" onClick={() => SET_BOARD_SIZE(30)}>S</button> :
         <button onClick={() => SET_BOARD_SIZE(30)}>S</button>
+        }
+        {BOARD_SIZE === 40 ? 
+        <button className="selected" onClick={() => SET_BOARD_SIZE(40)}>M</button> :
         <button onClick={() => SET_BOARD_SIZE(40)}>M</button>
+        }
+        {BOARD_SIZE === 50 ? 
+        <button className="selected" onClick={() => SET_BOARD_SIZE(50)}>L</button> :
         <button onClick={() => SET_BOARD_SIZE(50)}>L</button>
+        }
       </div>
 
       <div className="speedSliderContainer">

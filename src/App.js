@@ -51,11 +51,11 @@ const App = () => {
 
   // Board Size Changes - pause game, reset generation, reset board with new size.
   useEffect(() => {
-    setBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
-    setInitialBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
     setPlay(false);
     setGeneration(0);
     setInitialGeneration(0)
+    setBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
+    setInitialBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
   }, [BOARD_SIZE]);
 
   // useCallBack for square clicks, 
@@ -74,7 +74,7 @@ const App = () => {
         setBoardState(newBoardState);
       }
     },
-    [squareClicked, play]
+    [squareClicked, play, BOARD_SIZE, initialBoardState]
   );
 
   const rows = [];
@@ -87,8 +87,7 @@ const App = () => {
       <SquareRow
         row={boardState.slice(left, right)}
         key={i}
-        BOARD_WIDTH={width}
-        BOARD_HEIGHT={BOARD_SIZE}
+        BOARD_SIZE={BOARD_SIZE}
         rowIndex={i}
         handleSquareClick={handleSquareClick}
       />
@@ -108,6 +107,7 @@ const App = () => {
           play={play}
           generation={generation}
           setGeneration={setGeneration}
+          BOARD_SIZE={BOARD_SIZE}
           SET_BOARD_SIZE={SET_BOARD_SIZE}
         />
         <div className="board-container">

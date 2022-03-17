@@ -25,6 +25,9 @@
       font-size: large;
     }
   }
+  .selected{
+    box-shadow: 0px 0px 10px $white !important;
+  }
   button {
     display: flex;
     justify-content: center;
