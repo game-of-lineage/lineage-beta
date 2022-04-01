@@ -3,7 +3,11 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const config = {
-  entry: ["regenerator-runtime/runtime.js", "react-hot-loader/patch", "./src/index.js"],
+  entry: [
+    "regenerator-runtime/runtime.js",
+    "react-hot-loader/patch",
+    "./src/index.js",
+  ],
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -21,7 +25,7 @@ const config = {
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
         test: /\.svg$/,
@@ -52,16 +56,15 @@ const config = {
       filename: "index.html",
     }),
     new webpack.ProvidePlugin({
-      process: 'process/browser'
-    })
+      process: "process/browser",
+    }),
   ],
   resolve: {
-    extensions: ['.js'],
+    extensions: [".js"],
     fallback: {
-      "fs" : false,
-      "path" : require.resolve("path-browserify")
-    }
-  }
+      fs: false,
+    },
+  },
 };
 
 module.exports = config;
