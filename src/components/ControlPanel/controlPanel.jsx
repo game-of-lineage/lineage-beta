@@ -80,9 +80,8 @@ const ControlPanel = ({
           setPlay(!play);
         }}
       >
-        <FaPlay />
         <FaPause />
-        &nbsp;&nbsp; Playing
+        &nbsp;&nbsp; Pause
       </button>
       :
       <button
@@ -91,8 +90,7 @@ const ControlPanel = ({
         }}
       >
         <FaPlay />
-        <FaPause />
-        &nbsp;&nbsp; Paused
+        &nbsp;&nbsp; Play
       </button>
       }
       {/* Pause and go back to initial input */}

@@ -55,8 +55,22 @@ const App = () => {
     setPlay(false);
     setGeneration(0);
     setInitialGeneration(0)
-    setBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
-    setInitialBoardState(new Array(BOARD_SIZE ** 2 * 2).fill(0));
+    const adjustedBoard = new Array(BOARD_SIZE ** 2 * 2).fill(0)
+    const nonZeroes = []
+    const boardWidth = Math.sqrt(boardState.length / 2) * 2
+    const boardSizeOffset = BOARD_SIZE - boardWidth/2
+    for (let i = 0; i < boardState.length; i++){
+      if(boardState[i] !== 0){
+        const col = i % boardWidth
+        const row = Math.floor(i / boardWidth)
+        nonZeroes.push([col, row])
+      }
+    }
+    for (const [col, row] of nonZeroes){
+      adjustedBoard[col + boardSizeOffset + (row+boardSizeOffset/2) * BOARD_SIZE * 2] = Math.floor(Math.random() * 24) + 1
+    }
+    setBoardState([...adjustedBoard]);
+    setInitialBoardState([...adjustedBoard]);
   }, [BOARD_SIZE]);
 
   // useCallBack for square clicks, 

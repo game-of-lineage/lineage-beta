@@ -87,7 +87,7 @@ const UserDash = ({
     const username = loggedIn;
     axios
       .post(
-        "https://g01j2dn4rh.execute-api.us-east-1.amazonaws.com/prod/boards",
+        "https://4r6wcqxiw9.execute-api.us-east-1.amazonaws.com/prod/boards",
         {
           username,
           board_title,
@@ -107,7 +107,7 @@ const UserDash = ({
     setLoggingIn(true);
     axios
       .post(
-        "https://g01j2dn4rh.execute-api.us-east-1.amazonaws.com/prod/users",
+        "https://4r6wcqxiw9.execute-api.us-east-1.amazonaws.com/prod/users",
         {
           username: usernameField,
           password: passwordField,
@@ -140,7 +140,7 @@ const UserDash = ({
     if (loggedIn) {
       axios
         .get(
-          `https://g01j2dn4rh.execute-api.us-east-1.amazonaws.com/prod/boards/${loggedIn}`
+          `https://4r6wcqxiw9.execute-api.us-east-1.amazonaws.com/prod/boards/${loggedIn}`
         )
         .then(({ data }) => {
           setBoards(data.Items);

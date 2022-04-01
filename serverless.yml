@@ -5,6 +5,7 @@ provider:
   name: aws
   runtime: nodejs12.x
 
+
 functions:
   login:
     handler: handler.login
@@ -25,7 +26,6 @@ functions:
           path: /boards
           method: post
           
-
 plugins:
   - serverless-s3-sync
 custom:

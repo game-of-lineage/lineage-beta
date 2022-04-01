@@ -47,6 +47,7 @@ const login = async (event) => {
       return await signup(username, password);
     }
   } catch (error) {
+    console.log({ error, });
     return buildResponse(401, { message: "error logging in" });
   }
 };
