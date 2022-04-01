@@ -28,6 +28,8 @@ const ControlPanel = ({
   initialGeneration,
   SET_BOARD_SIZE,
   BOARD_SIZE,
+  resetClicked,
+  setResetClicked,
 }) => {
 
   const [openRules, setOpenRules] = useState(false);
@@ -96,9 +98,10 @@ const ControlPanel = ({
       {/* Pause and go back to initial input */}
       <button
         onClick={() => {
-          setPlay(false); 
-          setGeneration(initialGeneration);
           setBoardState([...initialBoardState]);
+          setGeneration(initialGeneration);
+          setPlay(false); 
+          setResetClicked(!resetClicked)
         }}
       >
         <FaBackward />

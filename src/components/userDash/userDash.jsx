@@ -51,9 +51,10 @@ const UserDash = ({
         "lwss",
         "mwss",
         "hwss",
+        "diamond",
       ];
-      
-      const rand = Math.floor(Math.random() * 12);
+
+      const rand = Math.floor(Math.random() * figs.length + 1);
       const newBoard = pasteFigure(initialBoardState, figures[figs[rand]]);
       setRandom(figs[rand][0].toUpperCase() + figs[rand].slice(1));
       setBoardState(newBoard);

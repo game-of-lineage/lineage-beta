@@ -23,6 +23,7 @@ const App = () => {
   const [generation, setGeneration] = useState(0);
   const [squareClicked, setSquareClicked] = useState(false);
   const [tickId, setTickId] = useState(false)
+  const [resetClicked, setResetClicked] = useState(false)
 
   useEffect(() => {
     if (play) {
@@ -74,7 +75,7 @@ const App = () => {
         setBoardState(newBoardState);
       }
     },
-    [squareClicked, play, BOARD_SIZE, initialBoardState]
+    [squareClicked, play, BOARD_SIZE, initialBoardState, resetClicked]
   );
 
   const rows = [];
@@ -109,6 +110,8 @@ const App = () => {
           setGeneration={setGeneration}
           BOARD_SIZE={BOARD_SIZE}
           SET_BOARD_SIZE={SET_BOARD_SIZE}
+          resetClicked={resetClicked}
+          setResetClicked={setResetClicked}
         />
         <div className="board-container">
           <div id="board">{rows}</div>
