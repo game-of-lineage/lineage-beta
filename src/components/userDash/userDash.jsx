@@ -31,16 +31,23 @@ const UserDash = ({
   //Selects random board from lexicon.
   function randomizeBoard(event) {
     event.preventDefault();
-    console.log(event)
-    if(event.nativeEvent.pointerId === -1) {
-      handleLogin(event)
+    if (event.nativeEvent.pointerId === -1) {
+      handleLogin(event);
       return false;
     } else {
-
       const figs = [
+        "101",
+        "acorn",
+        "AforAll",
+        "ants",
+        "aVerage",
         "block",
         "beeHive",
+        "b-heptomino",
+        "b-heptominoShuttle",
+        "diamond",
         "r-palomino",
+        "tetromino",
         "loaf",
         "boat",
         "tub",
@@ -51,22 +58,44 @@ const UserDash = ({
         "lwss",
         "mwss",
         "hwss",
-        "diamond",
+        "bakery(4 loaves)",
       ];
 
-      const rand = Math.floor(Math.random() * figs.length + 1);
+      const rand = Math.floor(Math.random() * figs.length);
       const newBoard = pasteFigure(initialBoardState, figures[figs[rand]]);
       setRandom(figs[rand][0].toUpperCase() + figs[rand].slice(1));
       setBoardState(newBoard);
     }
   }
 
+  const mapBoardToCurrentSize = (board) => {
+    const OLD_BOARD_HEIGHT = Math.sqrt(board.length / 2)
+    const OLD_BOARD_WIDTH = OLD_BOARD_HEIGHT*2
+    const BOARD_HEIGHT = Math.sqrt(boardState.length / 2)
+    const adjustedBoard = new Array(BOARD_HEIGHT ** 2 * 2).fill(0)
+    const boardSizeOffset = BOARD_HEIGHT - OLD_BOARD_HEIGHT
+    const nonZeroes = []
+
+    for (let i = 0; i < board.length; i++){
+      if(board[i]){
+        const col = i % (OLD_BOARD_WIDTH)
+        const row = Math.floor(i / OLD_BOARD_WIDTH)
+        nonZeroes.push([col, row])
+      }
+    }
+    for (const [col, row] of nonZeroes){
+      adjustedBoard[col + boardSizeOffset + Math.floor(row+boardSizeOffset/2) * BOARD_HEIGHT * 2] = Math.ceil(Math.random() * 24)
+    }
+    return adjustedBoard
+  }
+
   const handleLoad = (e) => {
     e.preventDefault();
     const idx = Number(loadSlot.current.value);
     const loadedBoard = boards[idx].board.L.map((x) => Number(x.N));
-    setBoardState(loadedBoard);
-    setInitialBoardState(loadedBoard);
+    const adjustedBoard = mapBoardToCurrentSize(loadedBoard)
+    setBoardState(adjustedBoard);
+    setInitialBoardState(adjustedBoard);
   };
 
   const handleSave = (e) => {
@@ -170,10 +199,7 @@ const UserDash = ({
               <button type="button" onClick={handleLogin}>
                 Log In
               </button>
-              <button
-                id="randomButton"
-                onClick={randomizeBoard}
-              >
+              <button id="randomButton" onClick={randomizeBoard}>
                 Randomize:
                 <br />
                 {random}
