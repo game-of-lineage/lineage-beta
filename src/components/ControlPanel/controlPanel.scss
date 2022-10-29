@@ -8,9 +8,26 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  width: 15%;
+  width: 150px;
+  min-width: 150px;
   padding: 0 10px;
   margin: 0 0 0 10px;
+  .sizeButtons{
+    display: flex;
+    height: 5%;
+    justify-content: space-between;
+    button{
+      display: flex;
+      height: 100%;
+      width: 30%;
+      justify-content: center;
+      align-items: center;
+      font-size: large;
+    }
+  }
+  .selected{
+    box-shadow: 0px 0px 10px $white !important;
+  }
   button {
     display: flex;
     justify-content: center;
@@ -20,8 +37,9 @@
     padding: 5%;
     height: 5%;
     color: $squirtle;
+    border-radius: 25px;
     border: 1px solid $squirtle;
-    box-shadow: 0px 0px 3px $white;
+    // box-shadow: 0px 0px 3px $white;
   }
   #rules-button {
     text-overflow: wrap;
@@ -32,21 +50,24 @@
     background-color: $blue;
     color: $squirtle;
     border: 1px solid $squirtle;
-    box-shadow: 0px 0px 3px $white;
+    border-radius: 25px;
+    // box-shadow: 0px 0px 3px $white;
+
     #rules-summary {
       margin-left: 33%;
       margin-right: 33%;
+      border-radius: 25px;
     }
     #rules-details {
-      text-align: left;
+      font-size: 10px;
       border-bottom: 1px solid $squirtle;
-      border-right: 1px solid $squirtle;
       background-color: $blue;
+      border-radius: 25px;
       color: $squirtle;
-      overflow: visible;
     }
   }
   .speedSlider {
-    margin-bottom: 50px;
+    height: 80%;
+    margin: 10px 35% 5px 0;
   }
 }

@@ -1,229 +1,276 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import './userDash.scss';
-import { Button, Menu, MenuItem, Fade } from '@mui/material';
-import fetch from 'node-fetch';
+import * as React from "react";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import "./userDash.scss";
+import figures from "../../utils/defaultboards";
+import pasteFigure from "../../utils/pasteFigure";
+import { runGame } from "../../utils/runGame";
 
-const UserDash = ({ boardState, initialBoardState, setBoardState, setInitialBoardState }) => {
-  const [loadSlot, setLoadSlot] = useState(null);
-  const [saveSlot, setSaveSlot] = useState(null);
-  const [userCookie, setUserCookie] = useState(null);
-  // const [user, setUser] = useState(null);
-  // const [password, setPassword] = useState(null);
+const UserDash = ({
+  boardState,
+  initialBoardState,
+  setBoardState,
+  setInitialBoardState,
+  setInitialGeneration,
+  generation,
+  play,
+  setPlay,
+  setGeneration,
+}) => {
+  const username = useRef(null);
+  const password = useRef(null);
+  const loadSlot = useRef(null);
+  const saveTitle = useRef(null);
 
-  function selectSave(event) {
-    event.preventDefault();
-    setSaveSlot(event.target.value);
-    // console.log('Currently selected save slot is now ' + event.target.value);
-  }
+  const [random, setRandom] = useState("None");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [boards, setBoards] = useState([]);
 
-  //Saves boards to user's slots.
-  function saveBoard(event) {
-    event.preventDefault();
-    // console.log('Here is the current board state');
-    // console.log(boardState);
-    // console.log('Saving the board state to slot ' + saveSlot);
-
-    const postObj = {
-      board: boardState,
-      saveSlot: saveSlot
-    }
-
-    const save = fetch('http://localhost:3000/api/boards', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postObj),
-    })
-      .then((response) => response.json())
-      // .then((data) => console.log('Finished posting.'));
-  }
-
-  function loadBoard(event) {
-    event.preventDefault();
-    console.log(loadSlot);
-    fetch(`http://localhost:3000/api/boardsGet`, {
-      //Changing to POST, since cookies aren't sent on get
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({loadSlot: loadSlot})
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(JSON.parse(data));
-        console.log(typeof JSON.parse(data));
-        console.log(Array.isArray(JSON.parse(data)));
-        setBoardState(JSON.parse(data));
-      });
-  }
-
-  function handleLogin(event) {
-    // // console.log(event.target.form[0].value);
-    const username = event.target.form[0].value;
-    const password = event.target.form[1].value;
-    fetch('http://localhost:3000/api/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log('Finished fetching');
-        // console.log(data);
-        // console.log('cookie');
-        // console.log(document.cookie.slice(7));
-        setUserCookie(document.cookie.slice(7));
-      })
-      .catch((err) => {
-        // console.log('Hit an error');
-        // console.log(err);
-      });
-  }
-
-  //Selects load slot
-  function selectLoad(event) {
-    event.preventDefault();
-    setLoadSlot(event.target.value);
-    // console.log('Currently selected load slot is now ' + event.target.value);
-  }
-
-
+  const [loggingIn, setLoggingIn] = useState(false);
 
   //Selects random board from lexicon.
-  async function randomizeBoard(event) {
+  function randomizeBoard(event) {
     event.preventDefault();
-    // console.log('Loading board now.');
-    // console.log('fetching a random fig');
-    const figs = ['block', 'bee-hive', 'loaf', 'boat', 'tub', 'blinker', 'toad', 'beacon', 'glider', 'lwss', 'mwss', 'hwss'];
-    const currentFigNum = Math.round(Math.random() * 12);
-    await fetch(`http://localhost:3000/api/randomize/${figs[currentFigNum]}`)
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
-        setBoardState(data);
+    if (event.nativeEvent.pointerId === -1) {
+      handleLogin(event);
+      return false;
+    } else {
+      const figs = [
+        "101",
+        "acorn",
+        "AforAll",
+        "ants",
+        "aVerage",
+        "block",
+        "beeHive",
+        "b-heptomino",
+        "b-heptominoShuttle",
+        "diamond",
+        "r-palomino",
+        "tetromino",
+        "loaf",
+        "boat",
+        "tub",
+        "blinker",
+        "toad",
+        "beacon",
+        "glider",
+        "lwss",
+        "mwss",
+        "hwss",
+        "bakery(4 loaves)",
+      ];
+
+      const rand = Math.floor(Math.random() * figs.length);
+      const newBoard = pasteFigure(initialBoardState, figures[figs[rand]]);
+      setRandom(figs[rand][0].toUpperCase() + figs[rand].slice(1));
+      setBoardState(newBoard);
+    }
+  }
+
+  const mapBoardToCurrentSize = (board) => {
+    const OLD_BOARD_HEIGHT = Math.sqrt(board.length / 2)
+    const OLD_BOARD_WIDTH = OLD_BOARD_HEIGHT*2
+    const BOARD_HEIGHT = Math.sqrt(boardState.length / 2)
+    const adjustedBoard = new Array(BOARD_HEIGHT ** 2 * 2).fill(0)
+    const boardSizeOffset = BOARD_HEIGHT - OLD_BOARD_HEIGHT
+    const nonZeroes = []
+
+    for (let i = 0; i < board.length; i++){
+      if(board[i]){
+        const col = i % (OLD_BOARD_WIDTH)
+        const row = Math.floor(i / OLD_BOARD_WIDTH)
+        nonZeroes.push([col, row])
+      }
+    }
+    for (const [col, row] of nonZeroes){
+      adjustedBoard[col + boardSizeOffset + Math.floor(row+boardSizeOffset/2) * BOARD_HEIGHT * 2] = Math.ceil(Math.random() * 24)
+    }
+    return adjustedBoard
+  }
+
+  const handleLoad = (e) => {
+    e.preventDefault();
+    const idx = Number(loadSlot.current.value);
+    const loadedBoard = boards[idx].board.L.map((x) => Number(x.N));
+    const adjustedBoard = mapBoardToCurrentSize(loadedBoard)
+    setBoardState(adjustedBoard);
+    setInitialBoardState(adjustedBoard);
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    const board_title = saveTitle.current.value;
+    const ddbFormat = {};
+    ddbFormat.board_title = { S: board_title };
+    const ddbBoard = boardState.map((x) => {
+      const obj = {
+        N: String(x),
+      };
+      return obj;
+    });
+    ddbFormat.board = {
+      L: ddbBoard,
+    };
+    const board = ddbFormat.board;
+    const username = loggedIn;
+    axios
+      .post(
+        "https://4r6wcqxiw9.execute-api.us-east-1.amazonaws.com/prod/boards",
+        {
+          username,
+          board_title,
+          board,
+        }
+      )
+      .then(() => {
+        const updatedLoadSlots = [...boards];
+        updatedLoadSlots.push(ddbFormat);
+        setBoards(updatedLoadSlots);
       });
-  }
+  };
 
-
-
-
-  //Loads from lexicon.
-  function loadBoard2(event) {
-    event.preventDefault();
-    // console.log('Loading board now.');
-    fetch(`http://localhost:3000/api/load/${loadSlot}`)
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
-        setBoardState(data);
+  const handleLogin = (e) => {
+    const usernameField = username.current.value;
+    const passwordField = password.current.value;
+    setLoggingIn(true);
+    axios
+      .post(
+        "https://4r6wcqxiw9.execute-api.us-east-1.amazonaws.com/prod/users",
+        {
+          username: usernameField,
+          password: passwordField,
+        }
+      )
+      .then(() => {
+        setLoggedIn(usernameField);
+        setLoggingIn(false);
+      })
+      .catch((error) => {
+        setLoggingIn(false);
+        alert("Error Logging In", error);
       });
-  }
+  };
 
-  //Uploads to Lexicon.
-  function submitBoard(event) {
-    event.preventDefault();
-    // console.log('Submitting board...');
-    // console.log(event.target.value);
-  }
-
-  //Uploads to Lexicon.
-  async function uploadBoard(event) {
-    event.preventDefault();
-    // console.log('Uploading board to server. ' + event.target);
-    await await fetch('http://localhost:3000/api/boardsLex', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(boardState),
-    })
-      .then((response) => response.json())
-      // .then((data) => console.log(data));
-  }
-
-  const slots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const saveoptions = slots.map((num) => {
-    return (
-      <option value={num} class='options' key={num}>
-        Save To Slot {num}
-      </option>
-    );
-  });
-  const loadoptions = slots.map((num) => {
-    return (
-      <option value={num} class='options' key={num + 10}>
-        Load Slot {num}
-      </option>
-    );
-  });
+  const handleGenerationClick = (e) => {
+    e.preventDefault();
+    if (play) {
+      setPlay(false);
+    } else {
+      const nextGen = runGame(boardState);
+      const gen = generation;
+      setGeneration(gen + 1);
+      setInitialGeneration(gen + 1);
+      setBoardState(nextGen);
+      setInitialBoardState(nextGen);
+    }
+  };
+  useEffect(() => {
+    if (loggedIn) {
+      axios
+        .get(
+          `https://4r6wcqxiw9.execute-api.us-east-1.amazonaws.com/prod/boards/${loggedIn}`
+        )
+        .then(({ data }) => {
+          setBoards(data.Items);
+        });
+    }
+  }, [loggedIn]);
 
   return (
-    <div id='saveload'>
-      {' '}
-      {!userCookie ? (
-        <form id='loginBox'>
-            <label htmlFor='logintext'>Username:</label>
-            <input type='text'></input>
-            <label htmlFor='password'>Password:</label>
-            <input type='password'></input>
-            <button type='button' onClick={handleLogin}>
-              Log In
-            </button>
-        </form>
-      ) : (
-        <form>
-          <div className='storage'>
-            <div>Hello,</div>
-            <div>{userCookie}</div>
+    <div className="userDash">
+      <button id="generation" onClick={handleGenerationClick}>
+        Generation:
+        <br /> {generation}
+      </button>
+      {loggingIn === false ? (
+        <div id="saveload">
+          {loggedIn === false ? (
+            <form className="loginBox">
+              <div className="set">
+                <label htmlFor="logintext">Username:</label>
+                <input ref={username} type="text"></input>
+              </div>
+              <div className="set">
+                <label htmlFor="password">Password:</label>
+                <input ref={password} type="password"></input>
+              </div>
 
-          </div>
-          <br />
-          <div className='storage wide'>
-            <div>
-              <label for='save'>Save Board:</label>
-              <select name='savefiles' id='save' onChange={selectSave} defaultValue='default'>
-                <option value='default' disabled>Select Save Slot</option>
-                {saveoptions}
-              </select>
-              <button name='savefiles' id='savebutton' onClick={saveBoard} type='button'>
-                Save
+              <button type="button" onClick={handleLogin}>
+                Log In
               </button>
-            </div>
-            <div>
-              <label for='load'>Load Board:</label>
-              <select name='load' id='load' onChange={selectLoad} defaultValue='default'>
-                <option value='default'>Select Load Slot</option>
-                {loadoptions}
-              </select>
-              <button name='loadButton' type='button' onClick={loadBoard}>Load</button>
-            </div>
-          </div>
-          <div className='storage'>
-            <div>
-              <label for='random'>Randomize:</label>
-              <button name='randomfiles' id='randomButton' onClick={randomizeBoard}>
-                Randomize
+              <button id="randomButton" onClick={randomizeBoard}>
+                Randomize:
+                <br />
+                {random}
               </button>
-            </div>
-            <div>
-              <label for='upload'>Upload Board:</label>
-              <button name='uploadfiles' id='upload' onClick={uploadBoard}>
-                Upload
-              </button>
-            </div>
-          </div>
-        </form>
+            </form>
+          ) : (
+            <form>
+              <div className="storage">
+                <div className="greeting">Hello,</div>
+                <div className="greeting">&nbsp;{loggedIn}</div>
+              </div>
+              <div className="storage wide">
+                <div className="outerSet">
+                  <div className="set">
+                    <label htmlFor="savefiles">Board Title:</label>
+                    <input
+                      placeholder="Name your board"
+                      ref={saveTitle}
+                    ></input>
+                  </div>
+                  <button
+                    name="savefiles"
+                    id="savebutton"
+                    onClick={handleSave}
+                    type="button"
+                  >
+                    Save
+                  </button>
+                </div>
+                <div className="outerSet">
+                  <div className="set">
+                    <label htmlFor="load">Load Board:</label>
+                    <select
+                      name="load"
+                      id="load"
+                      ref={loadSlot}
+                      defaultValue="default"
+                    >
+                      <option value="default" disabled>
+                        Select Load Slot
+                      </option>
+                      {boards.map((board, idx) => (
+                        <option key={idx} value={idx}>
+                          {board.board_title.S}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <button name="loadButton" onClick={handleLoad} type="button">
+                    Load
+                  </button>
+                </div>
+                <div className="set">
+                  <button
+                    name="randomfiles"
+                    id="randomButton"
+                    onClick={randomizeBoard}
+                  >
+                    Randomize:
+                    <br />
+                    {random}
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+        </div>
+      ) : (
+        <div id="saveload">
+          <div className="loggingIn">Logging In...</div>
+        </div>
       )}
     </div>
   );

@@ -14,9 +14,8 @@ body {
 
 #main{
   display: flex;
-  height: 80%;
+  height: 90%;
   z-index: 2;
-  justify-content: space-evenly;
 }
 #footer{
   display: flex;
@@ -24,26 +23,39 @@ body {
   margin: 10px;
   height: 10%;
 }
-
-#board{
+.board-container{
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  justify-content: space-between;
+  z-index: -1;
   height: 100%;
-  width: 75%;
-  box-shadow: 0px 0px 2px $white;
+  width: 80%;
+}
+#board{
+  height: 87%;
+  width: 100%;
+  margin-left: 25px;
+  // box-shadow: 0px 0px 2px $white;
   z-index: -1;
 }
 
 .speedSliderContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 25px;
   h2{
-    margin: 5px;
+    margin: 5px 0;
   }
   color: $squirtle;
   background-color: $blue;
   height: 70%;
-  border: 2px ridge $squirtle;
-  box-shadow: 0px 0px 2px $white;
+  border: 1px solid $squirtle;
+  // box-shadow: 0px 0px 2px $white;
   .speedSlider{
     text-align: left;
-    height: 250px;
+    height: 270px;
     .MuiSlider-rail{
       color: $darkblue;
       width: 10%;
