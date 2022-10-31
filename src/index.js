@@ -7,7 +7,7 @@ import "./styles.scss";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App/>
+    <App name="Squirtle" />
   </React.StrictMode>,
   document.getElementById('app')
 );
