@@ -26,18 +26,18 @@ const comparePassword = (password, storedPassword) =>
   });
 
 const login = async (event) => {
-  const { username, password } = JSON.parse(event.body);
-  if (!username || !password) {
-    return buildResponse(401, { message: "username or password missing" });
-  }
-  const loginParams = {
-    TableName: userTable,
-    Key: {
-      username: { S: username },
-    },
-    ProjectionExpression: "username, password",
-  };
   try {
+    const { username, password } = JSON.parse(event.body);
+    if (!username || !password) {
+      return buildResponse(401, { message: "username or password missing" });
+    }
+    const loginParams = {
+      TableName: userTable,
+      Key: {
+        username: { S: username },
+      },
+      ProjectionExpression: "username, password",
+    };
     const { Item } = await dynamodb.getItem(loginParams).promise();
     if (Item) {
       const result = await comparePassword(password, Item.password.S);
@@ -53,15 +53,15 @@ const login = async (event) => {
 };
 
 const signup = async (username, password) => {
-  const newPassword = await hashPassword(password);
-  const signUpParams = {
-    TableName: userTable,
-    Item: {
-      username: { S: username },
-      password: { S: newPassword },
-    },
-  };
   try {
+    const newPassword = await hashPassword(password);
+    const signUpParams = {
+      TableName: userTable,
+      Item: {
+        username: { S: username },
+        password: { S: newPassword },
+      },
+    };
     const data = await dynamodb.putItem(signUpParams).promise();
     return buildResponse(200, signUpParams.Item);
   } catch (error) {
